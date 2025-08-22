@@ -5,7 +5,7 @@ class Reserve::StepsController < ApplicationController
   before_action :set_slot, only: [:customer]
   
   def index
-    redirect_to action: :area
+    redirect_to reserve_steps_area_path
   end
   
   # エリア選択
@@ -16,7 +16,7 @@ class Reserve::StepsController < ApplicationController
   # 支店選択
   def branch
     unless params[:area_id].present?
-      redirect_to action: :area, alert: 'エリアを選択してください'
+      redirect_to reserve_steps_area_path, alert: 'エリアを選択してください'
       return
     end
     
@@ -27,7 +27,7 @@ class Reserve::StepsController < ApplicationController
   # 日時選択
   def datetime
     unless params[:branch_id].present?
-      redirect_to action: :area, alert: '支店を選択してください'
+      redirect_to reserve_steps_area_path, alert: '支店を選択してください'
       return
     end
     
@@ -47,7 +47,7 @@ class Reserve::StepsController < ApplicationController
   # 顧客情報入力
   def customer
     unless params[:slot_id].present?
-      redirect_to action: :area, alert: '日時を選択してください'
+      redirect_to reserve_steps_area_path, alert: '日時を選択してください'
       return
     end
     
@@ -61,11 +61,11 @@ class Reserve::StepsController < ApplicationController
   def next
     case params[:current_step]
     when 'area'
-      redirect_to action: :branch, area_id: params[:area_id]
+      redirect_to reserve_steps_branch_path(area_id: params[:area_id])
     when 'branch'
-      redirect_to action: :datetime, branch_id: params[:branch_id]
+      redirect_to reserve_steps_datetime_path(branch_id: params[:branch_id])
     when 'datetime'
-      redirect_to action: :customer, slot_id: params[:slot_id]
+      redirect_to reserve_steps_customer_path(slot_id: params[:slot_id])
     when 'customer'
       if save_customer_info
         redirect_to reserve_confirm_path
@@ -75,7 +75,7 @@ class Reserve::StepsController < ApplicationController
         render :customer
       end
     else
-      redirect_to action: :area
+      redirect_to reserve_steps_area_path
     end
   end
   
@@ -88,13 +88,13 @@ class Reserve::StepsController < ApplicationController
   def set_area
     @area = Area.find(params[:area_id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to action: :area, alert: '指定されたエリアが見つかりません'
+    redirect_to reserve_steps_area_path, alert: '指定されたエリアが見つかりません'
   end
   
   def set_branch
     @branch = Branch.find(params[:branch_id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to action: :area, alert: '指定された支店が見つかりません'
+    redirect_to reserve_steps_area_path, alert: '指定された支店が見つかりません'
   end
   
   def set_slot
@@ -102,17 +102,17 @@ class Reserve::StepsController < ApplicationController
     
     # スロットが予約可能かチェック
     unless @slot.available?
-      redirect_to action: :area, alert: '選択された時間は既に満員です。別の時間をお選びください'
+      redirect_to reserve_steps_area_path, alert: '選択された時間は既に満員です。別の時間をお選びください'
       return
     end
     
     # スロットが未来の日時かチェック
     unless @slot.starts_at > Time.current
-      redirect_to action: :area, alert: '過去の日時は選択できません'
+      redirect_to reserve_steps_area_path, alert: '過去の日時は選択できません'
       return
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to action: :area, alert: '指定された時間が見つかりません'
+    redirect_to reserve_steps_area_path, alert: '指定された時間が見つかりません'
   end
   
   def build_appointment_from_session

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_22_060504) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_22_060901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_22_060504) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "admin_memo"
     t.index ["appointment_type_id"], name: "index_appointments_on_appointment_type_id"
     t.index ["branch_id"], name: "index_appointments_on_branch_id"
     t.index ["phone", "slot_id"], name: "index_appointments_on_phone_and_slot_id", unique: true

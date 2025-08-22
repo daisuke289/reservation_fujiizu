@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   # 利用者向けの予約フロー
   scope :reserve do
     get 'steps', to: 'reserve/steps#index', as: :reserve_steps
+    get 'steps/area', to: 'reserve/steps#area', as: :reserve_steps_area
+    get 'steps/branch', to: 'reserve/steps#branch', as: :reserve_steps_branch
+    get 'steps/datetime', to: 'reserve/steps#datetime', as: :reserve_steps_datetime
+    get 'steps/customer', to: 'reserve/steps#customer', as: :reserve_steps_customer
     post 'steps/next', to: 'reserve/steps#next', as: :reserve_steps_next
     get 'confirm', to: 'reserve/confirm#index', as: :reserve_confirm
     post 'confirm', to: 'reserve/confirm#create', as: :reserve_confirm_create
@@ -23,13 +27,15 @@ Rails.application.routes.draw do
   
   # 管理者向けの機能
   namespace :admin do
+    root 'dashboard#index'
     get 'dashboard', to: 'dashboard#index'
-    resources :reservations do
+    resources :appointments do
       member do
         patch :approve
         patch :cancel
       end
     end
+    resources :prints, only: [:index]
   end
   
   # 開発環境でのみletter_openerをマウント

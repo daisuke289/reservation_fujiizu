@@ -4,7 +4,7 @@ RSpec.describe "Reservations (full flow)", type: :system do
   before do
     driven_by(:rack_test)
     area   = Area.find_or_create_by!(name: "テスト地区")
-    @branch = Branch.find_or_create_by!(area:, name: "テスト支店", address: "住所", phone: "055-999-0000", open_hours: "平日")
+    @branch = Branch.find_or_create_by!(area:, name: "テスト支店", address: "住所", phone: "05599900000", open_hours: "平日")
     @atype  = AppointmentType.find_or_create_by!(name: "事前相談")
     @slot   = Slot.find_or_create_by!(branch: @branch, starts_at: 1.day.from_now.change(hour: 10, min: 0), ends_at: 1.day.from_now.change(hour: 10, min: 30), capacity: 4, booked_count: 0)
   end
@@ -13,7 +13,7 @@ RSpec.describe "Reservations (full flow)", type: :system do
     visit root_path
 
     # 予約開始
-    click_on("来店予約をする")
+    click_on("今すぐ予約する")
 
     # エリア選択（リンク/ボタン/セレクト いずれかに合わせて調整）
     click_on("テスト地区") rescue nil

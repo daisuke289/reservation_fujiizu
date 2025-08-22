@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Appointment, type: :model do
   let!(:area)   { Area.create!(name: "テスト地区") }
-  let!(:branch) { Branch.create!(area:, name: "テスト支店", address: "住所", phone: "055-999-0000", open_hours: "平日") }
+  let!(:branch) { Branch.create!(area:, name: "テスト支店", address: "住所", phone: "05599900000", open_hours: "平日") }
   let!(:atype)  { AppointmentType.create!(name: "事前相談") }
   let!(:slot)   { Slot.create!(branch:, starts_at: Time.zone.parse("2099-01-01 10:00"), ends_at: Time.zone.parse("2099-01-01 10:30"), capacity: 4, booked_count: 0) }
 
