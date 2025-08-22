@@ -1,6 +1,51 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Appointment, type: :model do
+  let!(:area)   { Area.create!(name: "テスト地区") }
+  let!(:branch) { Branch.create!(area:, name: "テスト支店", address: "住所", phone: "055-999-0000", open_hours: "平日") }
+  let!(:atype)  { AppointmentType.create!(name: "事前相談") }
+  let!(:slot)   { Slot.create!(branch:, starts_at: Time.zone.parse("2099-01-01 10:00"), ends_at: Time.zone.parse("2099-01-01 10:30"), capacity: 4, booked_count: 0) }
+
+  it "電話は10〜11桁の数字のみで有効" do
+    a = Appointment.new(
+      branch:, slot:, appointment_type: atype,
+      name: "山田太郎", furigana: "ヤマダタロウ", phone: "09012345678", accept_privacy: true
+    )
+    expect(a).to be_valid
+  end
+
+  it "9桁以下は無効" do
+    a = Appointment.new(
+      branch:, slot:, appointment_type: atype,
+      name: "山田太郎", furigana: "ヤマダタロウ", phone: "09012345", accept_privacy: true
+    )
+    expect(a).to be_invalid
+  end
+
+  it "数字以外が混ざると無効" do
+    a = Appointment.new(
+      branch:, slot:, appointment_type: atype,
+      name: "山田太郎", furigana: "ヤマダタロウ", phone: "090-1234-5678", accept_privacy: true
+    )
+    expect(a).to be_invalid
+  end
+
+  it "同一電話・同一日で重複予約は無効（仕様に合わせて実装必須）" do
+    Appointment.create!(
+      branch:, slot:, appointment_type: atype,
+      name: "山田太郎", furigana: "ヤマダタロウ", phone: "09012345678", accept_privacy: true
+    )
+    another_slot_same_day = Slot.create!(branch:, starts_at: Time.zone.parse("2099-01-01 11:00"), ends_at: Time.zone.parse("2099-01-01 11:30"), capacity: 4, booked_count: 0)
+
+    dup = Appointment.new(
+      branch:, slot: another_slot_same_day, appointment_type: atype,
+      name: "山田次郎", furigana: "ヤマダジロウ", phone: "09012345678", accept_privacy: true
+    )
+
+    # モデル側で同日重複を弾くバリデーション/スコープを実装しておくこと
+    expect(dup).to be_invalid
+  end
+
   describe 'associations' do
     it { should belong_to(:branch) }
     it { should belong_to(:slot) }

@@ -85,7 +85,35 @@ bin/good_job start
 ## テスト
 
 ```bash
-bin/rails test
+# テストDB準備
+RAILS_ENV=test bin/rails db:drop db:create db:migrate
+
+# まずはモデル＆スモークが通るか
+bundle exec rspec spec/models/appointment_spec.rb spec/system/reservations_smoke_spec.rb
+
+# UIが整っていればフルフローも
+bundle exec rspec spec/system/reservations_full_flow_spec.rb
+
+# 全テスト実行
+bundle exec rspec
+```
+
+### よくある詰まりどころ
+
+- **ラベル文字が違って click_on / fill_in が見つからない** → テスト側の文言を実装に合わせて変更
+- **スロット選択がJS依存** → そのテストだけ `driven_by(:selenium_chrome_headless)` に変更
+- **同日重複予約のバリデーション未実装** → モデルに以下のようなバリデーションを追加
+
+```ruby
+validate :no_same_day_duplicate_by_phone
+
+def no_same_day_duplicate_by_phone
+  return if phone.blank? || slot.blank?
+  day_range = slot.starts_at.beginning_of_day..slot.starts_at.end_of_day
+  exists = Appointment.where(phone: phone).joins(:slot).where(slots: { starts_at: day_range })
+  exists = exists.where.not(id: id) if persisted?
+  errors.add(:base, "同一日・同一電話の重複予約はできません") if exists.exists?
+end
 ```
 
 ## 本番環境での注意事項
