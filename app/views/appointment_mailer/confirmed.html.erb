@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ご予約確認のお知らせ</title>
+  <style>
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background-color: #16a34a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .content {
+      padding: 30px 20px;
+    }
+    .reception-number {
+      background-color: #dcfce7;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .reception-number .label {
+      font-size: 16px;
+      color: #15803d;
+      margin-bottom: 10px;
+    }
+    .reception-number .number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #15803d;
+      letter-spacing: 2px;
+    }
+    .info-section {
+      margin: 30px 0;
+      border-left: 4px solid #16a34a;
+      padding-left: 15px;
+    }
+    .info-section h3 {
+      color: #16a34a;
+      margin: 0 0 15px 0;
+      font-size: 18px;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .info-table th,
+    .info-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    .info-table th {
+      background-color: #f3f4f6;
+      font-weight: bold;
+      width: 30%;
+      color: #374151;
+    }
+    .info-table td {
+      color: #1f2937;
+    }
+    .highlight {
+      background-color: #fef3c7;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .highlight strong {
+      color: #92400e;
+    }
+    .documents {
+      background-color: #dbeafe;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .documents h4 {
+      color: #1e40af;
+      margin: 0 0 15px 0;
+    }
+    .documents ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .documents li {
+      margin-bottom: 8px;
+      color: #1e3a8a;
+    }
+    .footer {
+      background-color: #f3f4f6;
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .contact-info {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ヘッダー -->
+    <div class="header">
+      <h1>ご予約確認のお知らせ</h1>
+      <p>富士伊豆農業協同組合</p>
+    </div>
+
+    <!-- コンテンツ -->
+    <div class="content">
+      <p><strong><%= @appointment.name %></strong> 様</p>
+      
+      <p>
+        この度は、富士伊豆農業協同組合の相続相談をご予約いただき、誠にありがとうございます。<br>
+        以下の内容でご予約を承りました。
+      </p>
+
+      <!-- 受付番号 -->
+      <div class="reception-number">
+        <div class="label">受付番号</div>
+        <div class="number"><%= @reception_number %></div>
+        <div style="margin-top: 10px; font-size: 14px; color: #15803d;">
+          ※ お問い合わせの際は、この番号をお伝えください
+        </div>
+      </div>
+
+      <!-- 予約情報 -->
+      <div class="info-section">
+        <h3>📅 ご予約内容</h3>
+        <table class="info-table">
+          <tr>
+            <th>予約日</th>
+            <td>
+              <strong><%= @slot.starts_at.strftime('%Y年%-m月%-d日') %>（<%= %w[日 月 火 水 木 金 土][@slot.starts_at.wday] %>曜日）</strong>
+            </td>
+          </tr>
+          <tr>
+            <th>時間</th>
+            <td><strong><%= @slot.starts_at.strftime('%H:%M') %> - <%= @slot.ends_at.strftime('%H:%M') %></strong></td>
+          </tr>
+          <tr>
+            <th>相談種別</th>
+            <td><%= @appointment_type.name %></td>
+          </tr>
+          <tr>
+            <th>ご来店人数</th>
+            <td><%= @appointment.party_size %>名様</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 支店情報 -->
+      <div class="info-section">
+        <h3>🏢 ご来店先</h3>
+        <table class="info-table">
+          <tr>
+            <th>支店名</th>
+            <td><strong><%= @branch.name %></strong></td>
+          </tr>
+          <tr>
+            <th>住所</th>
+            <td><%= @branch.address %></td>
+          </tr>
+          <tr>
+            <th>電話番号</th>
+            <td>
+              <% phone = @branch.phone %>
+              <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
+              <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
+            </td>
+          </tr>
+          <tr>
+            <th>営業時間</th>
+            <td style="white-space: pre-line;"><%= @branch.open_hours %></td>
+          </tr>
+        </table>
+      </div>
+
+      <% if @appointment.purpose.present? %>
+        <!-- 相談内容 -->
+        <div class="info-section">
+          <h3>💭 ご相談内容</h3>
+          <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; white-space: pre-line;">
+            <%= @appointment.purpose %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- 来店時のお願い -->
+      <div class="highlight">
+        <strong>🕒 ご来店時のお願い</strong><br>
+        ご予約時間の<strong>10分前</strong>までにお越しください。<br>
+        ご都合が悪くなった場合は、お早めにお電話でご連絡ください。
+      </div>
+
+      <!-- 持参書類 -->
+      <div class="documents">
+        <h4>📄 ご持参いただく書類</h4>
+        <ul>
+          <li><strong>本人確認書類</strong>（運転免許証、パスポート、マイナンバーカードなど）</li>
+          <li><strong>印鑑</strong>（認印で結構です）</li>
+          <li><strong>相続関連書類</strong>（遺言書、戸籍謄本、固定資産税納税通知書など、お持ちの範囲で）</li>
+          <li><strong>通帳・証書類</strong>（預金通帳、保険証書など、お持ちの範囲で）</li>
+        </ul>
+        <p style="margin: 10px 0 0 0; font-size: 14px; color: #1e3a8a;">
+          ※ 事前に資料をお持ちいただくことで、より具体的なアドバイスが可能です
+        </p>
+      </div>
+
+      <!-- お問い合わせ先 -->
+      <div class="contact-info">
+        <strong>📞 お問い合わせ・変更・キャンセル</strong><br>
+        <strong><%= @branch.name %></strong><br>
+        電話：<% phone = @branch.phone %>
+        <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
+        <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %><br>
+        受付時間：<%= @branch.open_hours.gsub(/\n/, '　') %>
+      </div>
+
+      <p>
+        ご不明な点がございましたら、お気軽にお問い合わせください。<br>
+        <%= @appointment.name %>様のご来店を心よりお待ちしております。
+      </p>
+    </div>
+
+    <!-- フッター -->
+    <div class="footer">
+      <p>
+        富士伊豆農業協同組合<br>
+        このメールは送信専用です。返信いただいてもお答えできません。
+      </p>
+    </div>
+  </div>
+</body>
+</html>

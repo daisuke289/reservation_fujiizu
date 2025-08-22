@@ -29,5 +29,8 @@ module ReservationFujiizu
     
     # デフォルトのロケールを日本語に設定
     config.i18n.default_locale = :ja
+    
+    # ジョブキューアダプターをGoodJobに設定
+    config.active_job.queue_adapter = :good_job
   end
 end

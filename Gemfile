@@ -69,3 +69,7 @@ gem "rspec-rails", "~> 8.0", :groups => [:development, :test]
 gem "factory_bot_rails", "~> 6.5", :groups => [:development, :test]
 
 gem "shoulda-matchers", "~> 6.5", :group => :test
+
+gem "good_job", "~> 4.11"
+
+gem "letter_opener_web", "~> 3.0", :group => :development

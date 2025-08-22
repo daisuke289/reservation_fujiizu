@@ -1,0 +1,50 @@
+【富士伊豆農業協同組合】ご予約確認のお知らせ
+
+<%= @appointment.name %> 様
+
+この度は、富士伊豆農業協同組合の相続相談をご予約いただき、誠にありがとうございます。
+以下の内容でご予約を承りました。
+
+■ 受付番号: <%= @reception_number %>
+※ お問い合わせの際は、この番号をお伝えください
+
+■ ご予約内容
+予約日    : <%= @slot.starts_at.strftime('%Y年%-m月%-d日') %>（<%= %w[日 月 火 水 木 金 土][@slot.starts_at.wday] %>曜日）
+時間     : <%= @slot.starts_at.strftime('%H:%M') %> - <%= @slot.ends_at.strftime('%H:%M') %>
+相談種別  : <%= @appointment_type.name %>
+来店人数  : <%= @appointment.party_size %>名様
+
+■ ご来店先
+支店名    : <%= @branch.name %>
+住所     : <%= @branch.address %>
+電話番号  : <% phone = @branch.phone %><%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %><%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
+営業時間  : <%= @branch.open_hours.gsub(/\n/, ' / ') %>
+
+<% if @appointment.purpose.present? %>
+■ ご相談内容
+<%= @appointment.purpose %>
+
+<% end %>
+■ ご来店時のお願い
+・ご予約時間の10分前までにお越しください
+・ご都合が悪くなった場合は、お早めにお電話でご連絡ください
+
+■ ご持参いただく書類
+・本人確認書類（運転免許証、パスポート、マイナンバーカードなど）
+・印鑑（認印で結構です）
+・相続関連書類（遺言書、戸籍謄本、固定資産税納税通知書など、お持ちの範囲で）
+・通帳・証書類（預金通帳、保険証書など、お持ちの範囲で）
+
+※ 事前に資料をお持ちいただくことで、より具体的なアドバイスが可能です
+
+■ お問い合わせ・変更・キャンセル
+<%= @branch.name %>
+電話：<% phone = @branch.phone %><%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %><%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
+受付時間：<%= @branch.open_hours.gsub(/\n/, ' / ') %>
+
+ご不明な点がございましたら、お気軽にお問い合わせください。
+<%= @appointment.name %>様のご来店を心よりお待ちしております。
+
+--
+富士伊豆農業協同組合
+このメールは送信専用です。返信いただいてもお答えできません。

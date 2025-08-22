@@ -7,14 +7,22 @@ class Reserve::ConfirmController < ApplicationController
   end
   
   def create
-    @appointment = Appointment.new(appointment_params)
-    
-    if @appointment.save
+    begin
+      @appointment = AppointmentService.create_appointment(appointment_params)
+      
       # セッションをクリア
       session[:reservation] = {}
-      redirect_to reserve_complete_path(id: @appointment.id)
-    else
-      # エラーがある場合は確認画面に戻る
+      redirect_to reserve_complete_path(id: @appointment.id), notice: 'ご予約が完了しました。'
+      
+    rescue AppointmentService::ReservationError => e
+      # サービスクラスからのエラーを表示
+      flash.now[:alert] = e.message
+      render :index
+      
+    rescue StandardError => e
+      # 予期しないエラー
+      Rails.logger.error "予約確定エラー: #{e.message}"
+      flash.now[:alert] = '予約の確定中にエラーが発生しました。しばらく時間をおいてから再度お試しください。'
       render :index
     end
   end
