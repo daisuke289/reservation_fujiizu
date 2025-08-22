@@ -10,5 +10,30 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "public/home#index"
+  
+  # 利用者向けの予約フロー
+  scope :reserve do
+    get 'steps', to: 'reserve/steps#index', as: :reserve_steps
+    post 'steps/next', to: 'reserve/steps#next', as: :reserve_steps_next
+    get 'confirm', to: 'reserve/confirm#index', as: :reserve_confirm
+    post 'confirm', to: 'reserve/confirm#create', as: :reserve_confirm_create
+    get 'complete', to: 'reserve/complete#index', as: :reserve_complete
+  end
+  
+  # 管理者向けの機能
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+    resources :reservations do
+      member do
+        patch :approve
+        patch :cancel
+      end
+    end
+  end
+  
+  # 開発環境でのみletter_openerをマウント
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 end

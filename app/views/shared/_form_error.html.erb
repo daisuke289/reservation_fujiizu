@@ -1,0 +1,145 @@
+<%#
+  Tailwind フォームエラー表示コンポーネント
+  使用例:
+    <%= render 'shared/form_error', model: @reservation %>
+    <%= render 'shared/form_error', errors: @reservation.errors, title: 'エラーが発生しました' %>
+    <%= render 'shared/form_error', errors: ['メールアドレスが正しくありません', '電話番号は必須です'] %>
+  
+  パラメータ:
+    model: ActiveRecordモデルオブジェクト (errors.full_messagesを自動取得)
+    errors: エラーメッセージの配列またはActiveModel::Errors
+    title: エラーボックスのタイトル デフォルト: '入力内容に誤りがあります'
+    icon: アイコンを表示 (true/false) デフォルト: true
+    dismissible: 閉じるボタンを表示 (true/false) デフォルト: false
+    variant: スタイル ('danger', 'warning', 'info') デフォルト: 'danger'
+    size: 文字サイズ ('md', 'lg', 'xl') デフォルト: 'lg' (高齢者向け)
+%>
+
+<%
+  # パラメータの初期化
+  model ||= nil
+  errors ||= nil
+  title ||= '入力内容に誤りがあります'
+  icon ||= true
+  dismissible ||= false
+  variant ||= 'danger'
+  size ||= 'lg'
+  
+  # エラーメッセージの取得
+  error_messages = []
+  
+  if model.present? && model.respond_to?(:errors)
+    error_messages = model.errors.full_messages
+  elsif errors.present?
+    if errors.respond_to?(:full_messages)
+      error_messages = errors.full_messages
+    elsif errors.is_a?(Array)
+      error_messages = errors
+    end
+  end
+  
+  # エラーがない場合は何も表示しない
+  return if error_messages.empty?
+  
+  # バリエーションに応じた色設定
+  variant_classes = {
+    'danger' => {
+      'bg' => 'bg-red-50',
+      'border' => 'border-red-400',
+      'text' => 'text-red-800',
+      'icon' => 'text-red-600',
+      'title' => 'text-red-900'
+    },
+    'warning' => {
+      'bg' => 'bg-yellow-50',
+      'border' => 'border-yellow-400',
+      'text' => 'text-yellow-800',
+      'icon' => 'text-yellow-600',
+      'title' => 'text-yellow-900'
+    },
+    'info' => {
+      'bg' => 'bg-blue-50',
+      'border' => 'border-blue-400',
+      'text' => 'text-blue-800',
+      'icon' => 'text-blue-600',
+      'title' => 'text-blue-900'
+    }
+  }
+  
+  colors = variant_classes[variant]
+  
+  # サイズに応じたクラス
+  size_classes = {
+    'md' => 'text-base',
+    'lg' => 'text-lg',
+    'xl' => 'text-xl'
+  }
+  
+  text_size = size_classes[size]
+%>
+
+<div class="<%= colors['bg'] %> border-l-4 <%= colors['border'] %> p-6 mb-6 rounded-lg" role="alert" 
+     data-controller="<%= dismissible ? 'dismissible' : '' %>">
+  <div class="flex">
+    <% if icon %>
+      <div class="flex-shrink-0">
+        <svg class="h-6 w-6 <%= colors['icon'] %> mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <% if variant == 'danger' %>
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          <% elsif variant == 'warning' %>
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          <% else %>
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          <% end %>
+        </svg>
+      </div>
+    <% end %>
+    
+    <div class="<%= icon ? 'ml-3' : '' %> flex-1">
+      <% if dismissible %>
+        <button type="button" class="float-right ml-4 <%= colors['text'] %> hover:opacity-70" data-action="click->dismissible#dismiss">
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      <% end %>
+      
+      <h3 class="<%= text_size %> font-bold <%= colors['title'] %> mb-3">
+        <%= title %>
+      </h3>
+      
+      <div class="<%= text_size %> <%= colors['text'] %>">
+        <% if error_messages.length == 1 %>
+          <p><%= error_messages.first %></p>
+        <% else %>
+          <p class="mb-2">以下の項目を確認してください：</p>
+          <ul class="list-disc list-inside space-y-1 ml-2">
+            <% error_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Stimulusコントローラー（dismissible機能用） %>
+<% if dismissible %>
+  <script>
+    // Stimulusコントローラーが読み込まれていない場合の簡易実装
+    document.addEventListener('DOMContentLoaded', function() {
+      const dismissButtons = document.querySelectorAll('[data-action="click->dismissible#dismiss"]');
+      dismissButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const alert = this.closest('[role="alert"]');
+          if (alert) {
+            alert.style.transition = 'opacity 0.3s ease-out';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 300);
+          }
+        });
+      });
+    });
+  </script>
+<% end %>

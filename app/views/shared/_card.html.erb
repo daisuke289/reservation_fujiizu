@@ -1,0 +1,126 @@
+<%#
+  Tailwind カードコンポーネント
+  使用例:
+    <%= render 'shared/card', title: 'カードタイトル' do %>
+      <p>カードの内容</p>
+    <% end %>
+    
+    <%= render 'shared/card', 
+        title: 'カードタイトル',
+        subtitle: 'サブタイトル',
+        footer: true,
+        shadow: 'lg',
+        padding: 'lg' do %>
+      <p>カードの内容</p>
+    <% end %>
+  
+  パラメータ:
+    title: カードのタイトル (オプション)
+    subtitle: カードのサブタイトル (オプション)
+    footer: フッター領域を表示 (true/false) デフォルト: false
+    shadow: 影のサイズ ('none', 'sm', 'md', 'lg', 'xl') デフォルト: 'md'
+    padding: パディングサイズ ('sm', 'md', 'lg', 'xl') デフォルト: 'lg' (高齢者向けに余裕を持たせる)
+    border: ボーダーを表示 (true/false) デフォルト: true
+    bg_color: 背景色クラス デフォルト: 'bg-white'
+    class: 追加のCSSクラス
+    
+  ブロック:
+    メインコンテンツ: yieldで受け取る
+    footer_content: フッター部分のコンテンツ (capture可能)
+%>
+
+<%
+  title ||= nil
+  subtitle ||= nil
+  footer ||= false
+  shadow ||= 'md'
+  padding ||= 'lg'
+  border ||= true
+  bg_color ||= 'bg-white'
+  additional_class ||= ''
+  footer_content ||= nil
+  
+  # 影のクラス
+  shadow_classes = {
+    'none' => '',
+    'sm' => 'shadow-sm',
+    'md' => 'shadow-md',
+    'lg' => 'shadow-lg',
+    'xl' => 'shadow-xl'
+  }
+  
+  # パディングのクラス（高齢者向けに余裕を持たせる）
+  padding_classes = {
+    'sm' => 'p-4',
+    'md' => 'p-6',
+    'lg' => 'p-8',
+    'xl' => 'p-10'
+  }
+  
+  # ボーダークラス
+  border_class = border ? 'border border-gray-200' : ''
+  
+  # 最終的なクラス
+  card_classes = [
+    bg_color,
+    'rounded-lg',
+    shadow_classes[shadow],
+    border_class,
+    'overflow-hidden',
+    additional_class
+  ].compact.join(' ')
+%>
+
+<div class="<%= card_classes %>">
+  <% if title.present? || subtitle.present? %>
+    <div class="<%= padding_classes[padding] %> border-b border-gray-200 bg-gray-50">
+      <% if title.present? %>
+        <h3 class="text-2xl font-bold text-gray-900">
+          <%= title %>
+        </h3>
+      <% end %>
+      <% if subtitle.present? %>
+        <p class="mt-2 text-lg text-gray-600">
+          <%= subtitle %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+  
+  <div class="<%= padding_classes[padding] %>">
+    <%= yield %>
+  </div>
+  
+  <% if footer || footer_content.present? %>
+    <div class="<%= padding_classes[padding] %> border-t border-gray-200 bg-gray-50">
+      <%= footer_content || capture(&block) if block_given? %>
+    </div>
+  <% end %>
+</div>
+
+<%# 
+  高度な使用例（フッター付き）:
+  
+  <% footer_html = capture do %>
+    <div class="flex justify-between items-center">
+      <span class="text-gray-600">更新日: <%= Date.current %></span>
+      <%= render 'shared/btn', text: '詳細を見る', variant: 'primary', size: 'md' %>
+    </div>
+  <% end %>
+  
+  <%= render 'shared/card', 
+      title: '予約確認',
+      subtitle: 'ご予約内容をご確認ください',
+      footer_content: footer_html do %>
+    <dl class="space-y-4">
+      <div>
+        <dt class="font-semibold text-gray-700">予約日</dt>
+        <dd class="mt-1 text-gray-900">2024年1月15日</dd>
+      </div>
+      <div>
+        <dt class="font-semibold text-gray-700">時間</dt>
+        <dd class="mt-1 text-gray-900">14:00 - 15:00</dd>
+      </div>
+    </dl>
+  <% end %>
+%>

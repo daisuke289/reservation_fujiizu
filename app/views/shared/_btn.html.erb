@@ -1,0 +1,97 @@
+<%#
+  Tailwind ボタンコンポーネント
+  使用例:
+    <%= render 'shared/btn', text: 'ボタンテキスト', variant: 'primary', size: 'lg', url: some_path %>
+    <%= render 'shared/btn', text: '送信', variant: 'success', type: 'submit' %>
+    <%= render 'shared/btn', text: 'キャンセル', variant: 'secondary', disabled: true %>
+  
+  パラメータ:
+    text: ボタンのテキスト (必須)
+    variant: ボタンのスタイル ('primary', 'secondary', 'success', 'danger', 'warning') デフォルト: 'primary'
+    size: ボタンのサイズ ('sm', 'md', 'lg', 'xl') デフォルト: 'lg' (高齢者向けに大きめ)
+    url: リンク先URL (link_toとして動作)
+    type: ボタンタイプ ('button', 'submit', 'reset') デフォルト: 'button'
+    disabled: 無効化フラグ (true/false) デフォルト: false
+    block: ブロックレベル要素にする (true/false) デフォルト: false
+    icon: アイコンクラス (オプション)
+    method: HTTPメソッド (link_toの場合のみ)
+    data: data属性のハッシュ
+    class: 追加のCSSクラス
+%>
+
+<%
+  text ||= 'ボタン'
+  variant ||= 'primary'
+  size ||= 'lg'
+  type ||= 'button'
+  disabled ||= false
+  block ||= false
+  icon ||= nil
+  method ||= nil
+  data ||= {}
+  additional_class ||= ''
+  
+  # サイズに応じたクラス（高齢者向けに大きめ）
+  size_classes = {
+    'sm' => 'px-3 py-2 text-base',
+    'md' => 'px-4 py-2.5 text-lg',
+    'lg' => 'px-6 py-3 text-xl',
+    'xl' => 'px-8 py-4 text-2xl'
+  }
+  
+  # バリエーションに応じたクラス
+  variant_classes = {
+    'primary' => 'bg-green-600 hover:bg-green-700 text-white border-green-600',
+    'secondary' => 'bg-gray-500 hover:bg-gray-600 text-white border-gray-500',
+    'success' => 'bg-green-500 hover:bg-green-600 text-white border-green-500',
+    'danger' => 'bg-red-600 hover:bg-red-700 text-white border-red-600',
+    'warning' => 'bg-yellow-500 hover:bg-yellow-600 text-white border-yellow-500',
+    'outline-primary' => 'bg-transparent hover:bg-green-600 text-green-600 hover:text-white border-2 border-green-600',
+    'outline-secondary' => 'bg-transparent hover:bg-gray-500 text-gray-500 hover:text-white border-2 border-gray-500'
+  }
+  
+  # 基本クラス
+  base_classes = "inline-flex items-center justify-center font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-4"
+  
+  # 無効化時のクラス
+  disabled_classes = disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+  
+  # ブロック要素のクラス
+  block_classes = block ? "w-full" : ""
+  
+  # 最終的なクラス
+  button_classes = [
+    base_classes,
+    size_classes[size],
+    variant_classes[variant],
+    disabled_classes,
+    block_classes,
+    additional_class
+  ].compact.join(' ')
+%>
+
+<% if defined?(url) && url.present? %>
+  <%= link_to url, 
+      class: button_classes,
+      method: method,
+      data: data,
+      'aria-disabled': disabled ? 'true' : nil do %>
+    <% if icon.present? %>
+      <i class="<%= icon %> mr-2"></i>
+    <% end %>
+    <%= text %>
+  <% end %>
+<% else %>
+  <button 
+    type="<%= type %>"
+    class="<%= button_classes %>"
+    <%= 'disabled' if disabled %>
+    <% data.each do |key, value| %>
+      data-<%= key %>="<%= value %>"
+    <% end %>>
+    <% if icon.present? %>
+      <i class="<%= icon %> mr-2"></i>
+    <% end %>
+    <%= text %>
+  </button>
+<% end %>
