@@ -136,119 +136,28 @@
 
     <!-- コンテンツ -->
     <div class="content">
-      <p><strong><%= @appointment.name %></strong> 様</p>
-      
-      <p>
-        この度は、富士伊豆農業協同組合の相続相談をご予約いただき、誠にありがとうございます。<br>
-        以下の内容でご予約を承りました。
-      </p>
+      <p><%= @appointment.name %> 様</p>
 
-      <!-- 受付番号 -->
-      <div class="reception-number">
-        <div class="label">受付番号</div>
-        <div class="number"><%= @reception_number %></div>
-        <div style="margin-top: 10px; font-size: 14px; color: #15803d;">
-          ※ お問い合わせの際は、この番号をお伝えください
-        </div>
-      </div>
-
-      <!-- 予約情報 -->
-      <div class="info-section">
-        <h3>📅 ご予約内容</h3>
-        <table class="info-table">
-          <tr>
-            <th>予約日</th>
-            <td>
-              <strong><%= @slot.starts_at.strftime('%Y年%-m月%-d日') %>（<%= %w[日 月 火 水 木 金 土][@slot.starts_at.wday] %>曜日）</strong>
-            </td>
-          </tr>
-          <tr>
-            <th>時間</th>
-            <td><strong><%= @slot.starts_at.strftime('%H:%M') %> - <%= @slot.ends_at.strftime('%H:%M') %></strong></td>
-          </tr>
-          <tr>
-            <th>相談種別</th>
-            <td><%= @appointment_type.name %></td>
-          </tr>
-          <tr>
-            <th>ご来店人数</th>
-            <td><%= @appointment.party_size %>名様</td>
-          </tr>
-        </table>
-      </div>
-
-      <!-- 支店情報 -->
-      <div class="info-section">
-        <h3>🏢 ご来店先</h3>
-        <table class="info-table">
-          <tr>
-            <th>支店名</th>
-            <td><strong><%= @branch.name %></strong></td>
-          </tr>
-          <tr>
-            <th>住所</th>
-            <td><%= @branch.address %></td>
-          </tr>
-          <tr>
-            <th>電話番号</th>
-            <td>
-              <% phone = @branch.phone %>
-              <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
-              <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
-            </td>
-          </tr>
-          <tr>
-            <th>営業時間</th>
-            <td style="white-space: pre-line;"><%= @branch.open_hours %></td>
-          </tr>
-        </table>
-      </div>
-
-      <% if @appointment.purpose.present? %>
-        <!-- 相談内容 -->
-        <div class="info-section">
-          <h3>💭 ご相談内容</h3>
-          <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; white-space: pre-line;">
-            <%= @appointment.purpose %>
-          </div>
-        </div>
-      <% end %>
-
-      <!-- 来店時のお願い -->
-      <div class="highlight">
-        <strong>🕒 ご来店時のお願い</strong><br>
-        ご予約時間の<strong>10分前</strong>までにお越しください。<br>
-        ご都合が悪くなった場合は、お早めにお電話でご連絡ください。
-      </div>
-
-      <!-- 持参書類 -->
-      <div class="documents">
-        <h4>📄 ご持参いただく書類</h4>
-        <ul>
-          <li><strong>本人確認書類</strong>（運転免許証、パスポート、マイナンバーカードなど）</li>
-          <li><strong>印鑑</strong>（認印で結構です）</li>
-          <li><strong>相続関連書類</strong>（遺言書、戸籍謄本、固定資産税納税通知書など、お持ちの範囲で）</li>
-          <li><strong>通帳・証書類</strong>（預金通帳、保険証書など、お持ちの範囲で）</li>
-        </ul>
-        <p style="margin: 10px 0 0 0; font-size: 14px; color: #1e3a8a;">
-          ※ 事前に資料をお持ちいただくことで、より具体的なアドバイスが可能です
-        </p>
-      </div>
-
-      <!-- お問い合わせ先 -->
-      <div class="contact-info">
-        <strong>📞 お問い合わせ・変更・キャンセル</strong><br>
-        <strong><%= @branch.name %></strong><br>
-        電話：<% phone = @branch.phone %>
-        <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
-        <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %><br>
-        受付時間：<%= @branch.open_hours.gsub(/\n/, '　') %>
-      </div>
+      <p>このたびは相続相談の来店予約をいただき、誠にありがとうございます。</p>
 
       <p>
-        ご不明な点がございましたら、お気軽にお問い合わせください。<br>
-        <%= @appointment.name %>様のご来店を心よりお待ちしております。
+        ◆ ご予約内容<br>
+        日時: <%= l(@appointment.slot.starts_at, format: :long) %><br>
+        支店: <%= @appointment.branch.name %><br>
+        人数: <%= @appointment.party_size || 1 %><br>
+        目的: <%= @appointment.appointment_type.name %>
       </p>
+
+      <p>
+        ◆ 持参書類<br>
+        - 死亡診断書<br>
+        - 戸籍謄本<br>
+        - 通帳<br>
+        - 届出印<br>
+        - 本人確認書類
+      </p>
+
+      <p>変更やキャンセルは前営業日15時までに、直接お電話でお願いいたします。</p>
     </div>
 
     <!-- フッター -->
