@@ -1,0 +1,216 @@
+<% content_for :title, "予約詳細 ##{@reception_number} - 予約管理" %>
+
+<div class="mb-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">予約詳細</h1>
+      <p class="text-gray-600 mt-1">受付番号: <span class="font-mono font-semibold">#<%= @reception_number %></span></p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to "一覧に戻る", admin_appointments_path, 
+          class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- メイン情報 -->
+  <div class="lg:col-span-2 space-y-6">
+    <!-- 予約情報 -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">予約情報</h2>
+      </div>
+      <div class="p-6">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">予約日</dt>
+            <dd class="mt-1 text-lg font-semibold text-gray-900">
+              <%= @appointment.slot.starts_at.strftime('%Y年%-m月%-d日') %>
+              <span class="text-base">（<%= %w[日 月 火 水 木 金 土][@appointment.slot.starts_at.wday] %>曜日）</span>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">時間</dt>
+            <dd class="mt-1 text-lg font-semibold text-gray-900">
+              <%= @appointment.slot.starts_at.strftime('%H:%M') %> - <%= @appointment.slot.ends_at.strftime('%H:%M') %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">支店</dt>
+            <dd class="mt-1 text-lg text-gray-900"><%= @appointment.branch.name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">相談種別</dt>
+            <dd class="mt-1 text-lg text-gray-900"><%= @appointment.appointment_type.name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">来店人数</dt>
+            <dd class="mt-1 text-lg text-gray-900"><%= @appointment.party_size %>名様</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">現在のステータス</dt>
+            <dd class="mt-1">
+              <span class="px-3 py-1 text-sm font-medium rounded-full 
+                <%= case @appointment.status
+                    when 'booked' then 'bg-yellow-100 text-yellow-800'
+                    when 'visited' then 'bg-green-100 text-green-800'
+                    when 'needs_followup' then 'bg-blue-100 text-blue-800'
+                    when 'canceled' then 'bg-red-100 text-red-800'
+                    end %>">
+                <%= case @appointment.status
+                    when 'booked' then '予約済み'
+                    when 'visited' then '来店済み'
+                    when 'needs_followup' then '要フォローアップ'
+                    when 'canceled' then 'キャンセル'
+                    end %>
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- お客様情報 -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">お客様情報</h2>
+      </div>
+      <div class="p-6">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">お名前</dt>
+            <dd class="mt-1 text-lg font-semibold text-gray-900"><%= @appointment.name %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">フリガナ</dt>
+            <dd class="mt-1 text-lg text-gray-900"><%= @appointment.furigana %></dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">電話番号</dt>
+            <dd class="mt-1 text-lg font-medium text-gray-900">
+              <% phone = @appointment.phone %>
+              <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
+              <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">メールアドレス</dt>
+            <dd class="mt-1 text-lg text-gray-900">
+              <%= @appointment.email.present? ? @appointment.email : '未入力' %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 相談内容・備考 -->
+    <% if @appointment.purpose.present? || @appointment.notes.present? %>
+      <div class="bg-white rounded-lg shadow">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-900">相談内容・ご要望</h2>
+        </div>
+        <div class="p-6 space-y-4">
+          <% if @appointment.purpose.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500 mb-2">ご相談内容</dt>
+              <dd class="bg-gray-50 border border-gray-200 rounded-lg p-4 whitespace-pre-line text-gray-900">
+                <%= @appointment.purpose %>
+              </dd>
+            </div>
+          <% end %>
+          <% if @appointment.notes.present? %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500 mb-2">その他・ご要望</dt>
+              <dd class="bg-gray-50 border border-gray-200 rounded-lg p-4 whitespace-pre-line text-gray-900">
+                <%= @appointment.notes %>
+              </dd>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- サイドバー -->
+  <div class="space-y-6">
+    <!-- ステータス更新 -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">ステータス更新</h2>
+      </div>
+      <div class="p-6 space-y-3">
+        <% unless @appointment.visited? %>
+          <%= form_with model: @appointment, url: admin_appointment_path(@appointment), method: :patch, local: true do |f| %>
+            <%= hidden_field_tag :action_type, 'status' %>
+            <%= f.hidden_field :status, value: 'visited' %>
+            <%= f.submit "来店済みにする", 
+                class: "w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+        <% end %>
+
+        <% unless @appointment.needs_followup? %>
+          <%= form_with model: @appointment, url: admin_appointment_path(@appointment), method: :patch, local: true do |f| %>
+            <%= hidden_field_tag :action_type, 'status' %>
+            <%= f.hidden_field :status, value: 'needs_followup' %>
+            <%= f.submit "フォローアップ必要", 
+                class: "w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+        <% end %>
+
+        <% unless @appointment.canceled? %>
+          <%= form_with model: @appointment, url: admin_appointment_path(@appointment), method: :patch, local: true do |f| %>
+            <%= hidden_field_tag :action_type, 'status' %>
+            <%= f.hidden_field :status, value: 'canceled' %>
+            <%= f.submit "キャンセルにする", 
+                class: "w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium",
+                data: { confirm: "本当にキャンセルにしますか？" } %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 管理メモ -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">管理メモ</h2>
+      </div>
+      <div class="p-6">
+        <%= form_with model: @appointment, url: admin_appointment_path(@appointment), method: :patch, local: true do |f| %>
+          <%= hidden_field_tag :action_type, 'memo' %>
+          <%= f.text_area :admin_memo, 
+              rows: 6,
+              placeholder: "管理用のメモを入力してください...",
+              class: "w-full border border-gray-300 rounded-md px-3 py-2 text-sm resize-none" %>
+          <div class="mt-3">
+            <%= f.submit "メモを保存", 
+                class: "w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 予約履歴 -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">予約情報</h2>
+      </div>
+      <div class="p-6 text-sm text-gray-600 space-y-2">
+        <div>
+          <span class="font-medium">作成日時:</span><br>
+          <%= @appointment.created_at.strftime('%Y/%m/%d %H:%M') %>
+        </div>
+        <div>
+          <span class="font-medium">最終更新:</span><br>
+          <%= @appointment.updated_at.strftime('%Y/%m/%d %H:%M') %>
+        </div>
+        <% if @appointment.email.present? %>
+          <div>
+            <span class="font-medium">確認メール:</span><br>
+            送信済み
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,213 @@
+<% content_for :title, "ダッシュボード - 管理画面" %>
+
+<div class="mb-6">
+  <h1 class="text-3xl font-bold text-gray-900">ダッシュボード</h1>
+  <p class="text-gray-600 mt-1">本日は <%= Date.current.strftime('%Y年%-m月%-d日') %>（<%= %w[日 月 火 水 木 金 土][Date.current.wday] %>曜日）です</p>
+</div>
+
+<!-- 統計カード -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <!-- 本日の予約数 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+          <i class="fas fa-calendar-day text-blue-600 text-xl"></i>
+        </div>
+      </div>
+      <div class="ml-4">
+        <dt class="text-sm font-medium text-gray-500">本日の予約</dt>
+        <dd class="text-2xl font-bold text-blue-600"><%= @today_appointments_count %>件</dd>
+      </div>
+    </div>
+    <div class="mt-3">
+      <%= link_to "詳細を見る", admin_appointments_path(filter: 'today'), 
+          class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+    </div>
+  </div>
+
+  <!-- 翌日の予約数 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+          <i class="fas fa-calendar-plus text-green-600 text-xl"></i>
+        </div>
+      </div>
+      <div class="ml-4">
+        <dt class="text-sm font-medium text-gray-500">翌日の予約</dt>
+        <dd class="text-2xl font-bold text-green-600"><%= @tomorrow_appointments_count %>件</dd>
+      </div>
+    </div>
+    <div class="mt-3">
+      <%= link_to "詳細を見る", admin_appointments_path(filter: 'tomorrow'), 
+          class: "text-green-600 hover:text-green-800 text-sm font-medium" %>
+    </div>
+  </div>
+
+  <!-- 未確認予約数 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+          <i class="fas fa-clock text-yellow-600 text-xl"></i>
+        </div>
+      </div>
+      <div class="ml-4">
+        <dt class="text-sm font-medium text-gray-500">未確認予約</dt>
+        <dd class="text-2xl font-bold text-yellow-600"><%= @pending_appointments_count %>件</dd>
+      </div>
+    </div>
+    <div class="mt-3">
+      <%= link_to "詳細を見る", admin_appointments_path(filter: 'booked'), 
+          class: "text-yellow-600 hover:text-yellow-800 text-sm font-medium" %>
+    </div>
+  </div>
+</div>
+
+<!-- クイックアクション -->
+<div class="bg-white rounded-lg shadow mb-8">
+  <div class="px-6 py-4 border-b border-gray-200">
+    <h2 class="text-lg font-semibold text-gray-900">クイックアクション</h2>
+  </div>
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <%= link_to admin_appointments_path(filter: 'today'), 
+          class: "flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition" do %>
+        <i class="fas fa-calendar-day text-blue-600 text-xl mr-3"></i>
+        <span class="font-medium text-blue-800">本日の予約</span>
+      <% end %>
+      
+      <%= link_to admin_appointments_path(filter: 'booked'), 
+          class: "flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition" do %>
+        <i class="fas fa-clock text-yellow-600 text-xl mr-3"></i>
+        <span class="font-medium text-yellow-800">未確認予約</span>
+      <% end %>
+      
+      <%= link_to admin_prints_path, 
+          class: "flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition" do %>
+        <i class="fas fa-print text-green-600 text-xl mr-3"></i>
+        <span class="font-medium text-green-800">印刷</span>
+      <% end %>
+      
+      <%= link_to admin_appointments_path, 
+          class: "flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition" do %>
+        <i class="fas fa-list text-gray-600 text-xl mr-3"></i>
+        <span class="font-medium text-gray-800">全予約一覧</span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <!-- 本日の予約一覧 -->
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">本日の予約</h2>
+    </div>
+    <div class="p-6">
+      <% if @today_appointments.any? %>
+        <div class="space-y-4">
+          <% @today_appointments.each do |appointment| %>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex-1">
+                <div class="flex items-center space-x-3">
+                  <span class="text-sm font-medium text-gray-900"><%= appointment.name %></span>
+                  <span class="px-2 py-1 text-xs font-medium rounded-full 
+                    <%= case appointment.status
+                        when 'booked' then 'bg-yellow-100 text-yellow-800'
+                        when 'visited' then 'bg-green-100 text-green-800'
+                        when 'needs_followup' then 'bg-blue-100 text-blue-800'
+                        when 'canceled' then 'bg-red-100 text-red-800'
+                        end %>">
+                    <%= case appointment.status
+                        when 'booked' then '予約済み'
+                        when 'visited' then '来店済み'
+                        when 'needs_followup' then '要フォローアップ'
+                        when 'canceled' then 'キャンセル'
+                        end %>
+                  </span>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                  <%= appointment.slot.starts_at.strftime('%H:%M') %> - 
+                  <%= appointment.branch.name %> - 
+                  <%= appointment.appointment_type.name %>
+                </div>
+              </div>
+              <div class="ml-4">
+                <%= link_to "詳細", admin_appointment_path(appointment), 
+                    class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if @today_appointments_count > 10 %>
+          <div class="mt-4 text-center">
+            <%= link_to "すべて表示（#{@today_appointments_count}件）", admin_appointments_path(filter: 'today'), 
+                class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500 text-center py-4">本日の予約はありません</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 翌日の予約一覧 -->
+  <div class="bg-white rounded-lg shadow">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">翌日の予約</h2>
+    </div>
+    <div class="p-6">
+      <% if @tomorrow_appointments.any? %>
+        <div class="space-y-4">
+          <% @tomorrow_appointments.each do |appointment| %>
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex-1">
+                <div class="flex items-center space-x-3">
+                  <span class="text-sm font-medium text-gray-900"><%= appointment.name %></span>
+                  <span class="px-2 py-1 text-xs font-medium rounded-full 
+                    <%= case appointment.status
+                        when 'booked' then 'bg-yellow-100 text-yellow-800'
+                        when 'visited' then 'bg-green-100 text-green-800'
+                        when 'needs_followup' then 'bg-blue-100 text-blue-800'
+                        when 'canceled' then 'bg-red-100 text-red-800'
+                        end %>">
+                    <%= case appointment.status
+                        when 'booked' then '予約済み'
+                        when 'visited' then '来店済み'
+                        when 'needs_followup' then '要フォローアップ'
+                        when 'canceled' then 'キャンセル'
+                        end %>
+                  </span>
+                </div>
+                <div class="text-sm text-gray-600 mt-1">
+                  <%= appointment.slot.starts_at.strftime('%H:%M') %> - 
+                  <%= appointment.branch.name %> - 
+                  <%= appointment.appointment_type.name %>
+                </div>
+              </div>
+              <div class="ml-4">
+                <%= link_to "詳細", admin_appointment_path(appointment), 
+                    class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <% if @tomorrow_appointments_count > 10 %>
+          <div class="mt-4 text-center">
+            <%= link_to "すべて表示（#{@tomorrow_appointments_count}件）", admin_appointments_path(filter: 'tomorrow'), 
+                class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500 text-center py-4">翌日の予約はありません</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Font Awesome CDN -->
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<% end %>
