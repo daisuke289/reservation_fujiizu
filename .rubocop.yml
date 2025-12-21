@@ -2,7 +2,38 @@
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 # Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+# 実務で回るレベルに調整：過度に厳しいスタイルチェックを緩和
+
+# ドキュメント中心のPRで開発が止まらないよう、スタイルのみの問題は許容
+Style/StringLiterals:
+  Enabled: false  # シングル/ダブルクォートの統一は強制しない
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false  # 補間内の文字列リテラルも強制しない
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false  # 配列内のスペースは開発者の判断に任せる
+
+Layout/TrailingWhitespace:
+  Enabled: true
+  AutoCorrect: true  # 末尾の空白は自動修正
+
+Layout/LineLength:
+  Max: 120  # 80文字は厳しすぎるため120文字まで許容
+  AllowedPatterns: ['^#']  # コメント行は除外
+
+Style/Documentation:
+  Enabled: false  # ドキュメントコメントは必須としない（小規模プロジェクト）
+
+Style/FrozenStringLiteralComment:
+  Enabled: false  # frozen_string_literal コメントは強制しない
+
+# セキュリティや重要なコード品質に関わるものは有効化
+Lint/Debugger:
+  Enabled: true  # debugger残しは検出
+
+Lint/UnusedMethodArgument:
+  Enabled: true  # 未使用の引数は検出
+
+Rails/Output:
+  Enabled: true  # 本番環境での puts/print は検出
