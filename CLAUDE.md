@@ -2,6 +2,85 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## Role
+
+あなたは熟練したRuby on Railsエンジニアです。
+SOLID原則、Rails Way、およびTDD（テスト駆動開発）に従い、保守性が高く安全なコードを書きます。
+
+---
+
+## Workflow
+
+あなたは、以下のステップを実行します。
+
+### Step 1: タスク受付と準備
+1. ユーザーから **GitHub Issue 番号**を受け付けたらフロー開始です。`/create-gh-branch` カスタムコマンドを実行し、Issueの取得とブランチを作成します。
+2. Issueの内容を把握し、関連するコードを調査します。
+
+### Step 2: 実装計画の策定と承認
+1. 分析結果に基づき、実装計画を策定します。
+2. 計画をユーザーに提示し、承認を得ます。**承認なしに次へ進んではいけません。**
+
+### Step 3: 実装・レビュー・修正サイクル
+1. 承認された計画に基づき、実装を行います。
+2. 実装完了後、**あなた自身でコードのセルフレビューを行います。**
+3. 実装内容とレビュー結果をユーザーに報告します。
+4. **【ユーザー承認】**: 報告書を提示し、承認を求めます。
+   - `yes`: コミットして完了。
+   - `fix`: 指摘に基づき修正し、再度レビューからやり直す。
+
+---
+
+## Rules
+
+以下のルールは、あなたの行動を規定する最優先事項およびガイドラインです。
+
+### 重要・最優先事項 (CRITICAL)
+- **ユーザー承認は絶対**: いかなる作業も、ユーザーの明示的な承認なしに進めてはいけません。
+- **品質の担保**: コミット前には必ずテスト(`bundle exec rspec`)を実行し、全てパスすることを確認してください。
+- **効率と透明性**: 作業に行き詰まった場合、同じ方法で3回以上試行することはやめてください。ユーザーに状況を報告し、別のアプローチを相談してください。
+
+### 基本理念 (PHILOSOPHY)
+- **大きな変更より段階的な進捗**: テストを通過する小さな変更を積み重ねる。
+- **シンプルさが意味すること**: クラスやメソッドは単一責任を持つ（Single Responsibility）。
+- **実装前に計画、実装後にレビュー**: 計画なしに実装を開始しない。実装後は必ずセルフレビューを行う。
+
+### 技術・実装ガイドライン
+- **実装プロセス (TDD)**: Red -> Green -> Refactor のサイクルを厳守する。
+- **アーキテクチャ**: Fat Model, Skinny Controller を心がける。複雑なビジネスロジックはServiceクラスへ移譲。
+- **完了の定義**:
+  - [ ] テストが通っている
+  - [ ] RuboCopのエラーがない
+  - [ ] Railsアプリが正常に動作する
+  - [ ] 実装内容がImplementation Roadmapに沿っている
+
+---
+
+## Commands
+
+開発で頻繁に使用するコマンドです。
+
+### Test & Lint
+- **RSpec (テスト)**: `bundle exec rspec`
+- **RuboCop (Lint)**: `bundle exec rubocop`
+- **RuboCop (自動修正)**: `bundle exec rubocop -a`
+
+### Rails
+- **Server**: `bin/rails server` または `bin/dev`
+- **Console**: `bin/rails console`
+- **DB Migrate**: `bin/rails db:migrate`
+- **DB Reset**: `bin/rails db:reset`
+- **Routes確認**: `bin/rails routes`
+
+### Slot管理（Phase 2完了後に使用可能）
+- **初回データ生成**: `bin/rails slots:generate_initial`
+- **特定月の生成**: `bin/rails slots:generate_month YEAR=2025 MONTH=3`
+- **未来のSlotクリア**: `bin/rails slots:clear_future`
+
+---
+
 ## Project Overview
 
 富士伊豆農業協同組合の相続相談予約システム。高齢者向けの来店予約WebアプリケーションとバックオフィスでのA4印刷管理機能を提供。
@@ -71,7 +150,6 @@ bin/rails console
 **目的**: 月次でSlotを自動生成し、予約可能期間を管理
 
 #### Step 2.1: holiday_jp gemのインストール
-
 ```bash
 # Gemfile に追加
 gem 'holiday_jp'
@@ -83,7 +161,6 @@ bundle install
 #### Step 2.2: SlotGeneratorService実装
 
 **ファイル**: `app/services/slot_generator_service.rb`
-
 ```ruby
 class SlotGeneratorService
   TIME_SLOTS = [
@@ -152,7 +229,6 @@ end
 #### Step 2.3: SlotGeneratorJob実装
 
 **ファイル**: `app/jobs/slot_generator_job.rb`
-
 ```ruby
 class SlotGeneratorJob < ApplicationJob
   queue_as :default
@@ -180,7 +256,6 @@ end
 #### Step 2.4: Rakeタスク実装
 
 **ファイル**: `lib/tasks/slots.rake`
-
 ```ruby
 namespace :slots do
   desc "Generate initial slot data for 3 months (current + next 2 months)"
@@ -231,7 +306,6 @@ end
 #### Step 2.5: GoodJob定期実行設定
 
 **ファイル**: `config/initializers/good_job.rb`
-
 ```ruby
 Rails.application.configure do
   config.good_job.tap do |good_job|
@@ -271,7 +345,6 @@ bin/rails console
 #### Step 3.1: ルーティング追加
 
 **ファイル**: `config/routes.rb`
-
 ```ruby
 namespace :admin do
   # ...existing routes...
@@ -282,7 +355,6 @@ end
 #### Step 3.2: コントローラー実装
 
 **ファイル**: `app/controllers/admin/branches_controller.rb`
-
 ```ruby
 class Admin::BranchesController < Admin::BaseController
   before_action :set_branch, only: [:edit, :update]
@@ -318,7 +390,6 @@ end
 #### Step 3.3: ビュー実装
 
 **ファイル**: `app/views/admin/branches/index.html.erb`
-
 ```erb
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
@@ -366,7 +437,6 @@ end
 ```
 
 **ファイル**: `app/views/admin/branches/edit.html.erb`
-
 ```erb
 <div class="container mx-auto px-4 py-8 max-w-2xl">
   <h1 class="text-3xl font-bold mb-6"><%= @branch.name %> - 編集</h1>
@@ -424,7 +494,6 @@ end
 **ファイル**: `app/views/admin/dashboard/index.html.erb`
 
 既存のダッシュボードに以下のリンクを追加：
-
 ```erb
 <%= link_to "支店管理", admin_branches_path, class: "btn btn-primary" %>
 ```
@@ -436,7 +505,6 @@ end
 #### Step 4.1: SlotGeneratorServiceのテスト
 
 **ファイル**: `spec/services/slot_generator_service_spec.rb`
-
 ```ruby
 require 'rails_helper'
 
@@ -509,7 +577,6 @@ end
 #### Step 4.2: Admin::BranchesControllerのテスト
 
 **ファイル**: `spec/requests/admin/branches_spec.rb`
-
 ```ruby
 require 'rails_helper'
 
@@ -566,7 +633,6 @@ end
 ---
 
 ### 実装の推奨順序まとめ
-
 ```
 1. Phase 1（1日目）
    ├─ Branchテーブルにdefault_capacityカラム追加
@@ -594,132 +660,9 @@ end
 
 ---
 
-## Development Commands
-
-### セットアップ
-
-```bash
-# 初回セットアップ
-bundle install
-bin/rails db:drop db:create db:migrate db:seed
-
-# Slot初期データ生成（Phase 2完了後）
-bin/rails slots:generate_initial
-
-# データベースのリセット
-bin/rails db:reset
-
-# マイグレーションのみ実行
-bin/rails db:migrate
-
-# シードデータの再投入
-bin/rails db:seed
-```
-
-### Slot管理コマンド（Phase 2完了後）
-
-```bash
-# 初回データ生成（3ヶ月分）
-bin/rails slots:generate_initial
-
-# 特定月の生成
-bin/rails slots:generate_month YEAR=2025 MONTH=3
-
-# 未来のSlotをクリア（注意して使用）
-bin/rails slots:clear_future
-
-# Slot数の確認
-bin/rails console
-> Slot.count
-> Slot.where('starts_at >= ?', Date.today).group_by { |s| s.starts_at.strftime('%Y年%m月') }.transform_values(&:count)
-```
-
-### サーバー起動
-
-```bash
-# 開発サーバー（バックグラウンドジョブ含む）
-bin/dev
-
-# Railsサーバーのみ
-bin/rails server
-
-# GoodJobワーカーのみ
-bundle exec good_job start
-
-# コンソール
-bin/rails console
-```
-
-### テスト
-
-```bash
-# テストDBのセットアップ
-RAILS_ENV=test bin/rails db:drop db:create db:migrate
-
-# 全テスト実行
-bundle exec rspec
-
-# スモークテスト（基本動作確認）
-bundle exec rspec spec/models/appointment_spec.rb spec/system/reservations_smoke_spec.rb
-
-# フルフローテスト
-bundle exec rspec spec/system/reservations_full_flow_spec.rb
-
-# 特定のファイルのみ
-bundle exec rspec spec/models/appointment_spec.rb
-
-# 特定の行のみ
-bundle exec rspec spec/models/appointment_spec.rb:42
-
-# タグ指定
-bundle exec rspec --tag smoke
-
-# Phase 2完了後のテスト
-bundle exec rspec spec/services/slot_generator_service_spec.rb
-bundle exec rspec spec/requests/admin/branches_spec.rb
-```
-
-### デバッグ
-
-```bash
-# メール確認（開発環境）
-# ブラウザで http://localhost:3000/letter_opener にアクセス
-
-# ログ確認
-tail -f log/development.log
-tail -f log/test.log
-tail -f log/good_job.log
-
-# GoodJobダッシュボード
-# config/routes.rb に mount GoodJob::Engine を追加後アクセス
-# http://localhost:3000/good_job
-
-# Slot生成ログ確認
-tail -f log/development.log | grep SlotGenerator
-```
-
-### コードチェック
-
-```bash
-# RuboCop（Linter）
-bundle exec rubocop
-
-# 自動修正
-bundle exec rubocop -a
-
-# Brakeman（セキュリティチェック）
-bundle exec brakeman
-
-# Bundle Audit（脆弱性チェック）
-bundle exec bundle-audit check --update
-```
-
----
-
 ## Architecture Overview
 
 ### Data Model Hierarchy
-
 ```
 Area (8 regions) 
   ↓
@@ -1112,7 +1055,6 @@ let(:branch) { create(:branch, default_capacity: 2) }
 ---
 
 ## Directory Structure
-
 ```
 app/
 ├── controllers/
@@ -1198,7 +1140,6 @@ docs/
 ## Environment Variables
 
 開発・本番環境で設定が必要な環境変数:
-
 ```bash
 # Basic認証（管理画面）
 BASIC_AUTH_USER=admin
@@ -1302,7 +1243,6 @@ RAILS_MASTER_KEY=<config/master.keyの内容>
 ---
 
 ## Useful Rails Commands
-
 ```bash
 # ルート一覧
 bin/rails routes
@@ -1342,7 +1282,6 @@ bin/rails db:reset  # drop → create → migrate → seed
 ## Git Workflow
 
 推奨されるGitワークフロー:
-
 ```bash
 # Phase 1: default_capacity追加
 git checkout -b feature/add-default-capacity-to-branches
@@ -1395,7 +1334,6 @@ git push origin test/add-slot-generator-tests
 ## Quick Start Guide for New Developers
 
 既存の機能を理解し、未実装機能の開発を始めるための手順:
-
 ```bash
 # 1. リポジトリのクローン
 git clone [repository_url]
@@ -1425,6 +1363,6 @@ bin/dev
 
 ---
 
-**ドキュメントバージョン**: 2.0  
+**ドキュメントバージョン**: 2.1  
 **最終更新日**: 2024年12月  
 **未実装機能**: Phase 1-4（Implementation Roadmapを参照）
