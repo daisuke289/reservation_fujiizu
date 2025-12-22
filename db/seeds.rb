@@ -54,7 +54,8 @@ Area.all.each do |area|
       name: branch_name,
       address: "#{area.name}#{branch_name}住所",
       phone: "0#{555 + i}#{sprintf('%06d', rand(1000000))}",
-      open_hours: "平日 9:00-17:00\n土曜 9:00-12:00"
+      open_hours: "平日 9:00-17:00\n土曜 9:00-12:00",
+      default_capacity: 1
     )
   end
 end

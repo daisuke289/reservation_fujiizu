@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_22_060901) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_22_115244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -56,6 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_22_060901) do
     t.text "open_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "default_capacity", default: 1, null: false
     t.index ["area_id"], name: "index_branches_on_area_id"
   end
 
