@@ -11,5 +11,5 @@ class Branch < ApplicationRecord
                     format: { with: /\A\d{10,11}\z/, message: "は10〜11桁の数字で入力してください" }
   validates :open_hours, presence: true
   validates :default_capacity, presence: true,
-                              numericality: { greater_than_or_equal_to: 1 }
+                               numericality: { greater_than_or_equal_to: 1, only_integer: true }
 end
