@@ -4,7 +4,7 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # ドキュメントファイルは除外
 AllCops:
   Exclude:
-    - 'CLAUDE.md'
+    - '**/*.md'
 
 # Overwrite or add rules to create your own house style
 # 実務で回るレベルに調整：過度に厳しいスタイルチェックを緩和
