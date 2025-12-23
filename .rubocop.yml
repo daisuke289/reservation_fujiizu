@@ -16,6 +16,9 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   Enabled: false  # 補間内の文字列リテラルも強制しない
 
+Style/HashSyntax:
+  Enabled: false  # ハッシュ記法（古い形式と新しい形式）の統一は強制しない
+
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false  # 配列内のスペースは開発者の判断に任せる
 
