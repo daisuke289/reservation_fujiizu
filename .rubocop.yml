@@ -31,6 +31,18 @@ Layout/TrailingWhitespace:
 Layout/TrailingEmptyLines:
   Enabled: false  # ファイル末尾の改行チェックを無効化
 
+Layout/SpaceAfterComma:
+  Enabled: false  # カンマ後のスペースは強制しない
+
+Layout/EndAlignment:
+  Enabled: false  # endの位置揃えは強制しない
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false  # ブロック周りの空行は強制しない
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false  # クラス周りの空行は強制しない
+
 Layout/LineLength:
   Max: 120  # 80文字は厳しすぎるため120文字まで許容
   AllowedPatterns: ['^#']  # コメント行は除外
@@ -49,4 +61,4 @@ Lint/UnusedMethodArgument:
   Enabled: true  # 未使用の引数は検出
 
 Rails/Output:
-  Enabled: true  # 本番環境での puts/print は検出
+  Enabled: false  # Rakeタスクなどでのputs使用を許可
