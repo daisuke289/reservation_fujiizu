@@ -19,12 +19,17 @@ Style/StringLiteralsInInterpolation:
 Style/HashSyntax:
   Enabled: false  # ハッシュ記法（古い形式と新しい形式）の統一は強制しない
 
+Style/RedundantReturn:
+  Enabled: false  # return文の有無はコードの可読性に応じて判断
+
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false  # 配列内のスペースは開発者の判断に任せる
 
 Layout/TrailingWhitespace:
-  Enabled: true
-  AutoCorrect: true  # 末尾の空白は自動修正
+  Enabled: false  # 行末空白のチェックを無効化
+
+Layout/TrailingEmptyLines:
+  Enabled: false  # ファイル末尾の改行チェックを無効化
 
 Layout/LineLength:
   Max: 120  # 80文字は厳しすぎるため120文字まで許容
