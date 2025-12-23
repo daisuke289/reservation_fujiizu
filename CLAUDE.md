@@ -155,38 +155,38 @@ class SlotGeneratorService
     ["14:30", "15:00"], ["15:00", "15:30"], ["15:30", "16:00"],
     ["16:00", "16:30"]
   ].freeze
-  
+
   # 指定月の全営業日に対してSlot生成
   def self.generate_for_month(year, month)
     start_date = Date.new(year, month, 1)
     end_date = start_date.end_of_month
-    
+
     Rails.logger.info "Generating slots for #{year}年#{month}月"
-    
+
     slot_count = 0
     (start_date..end_date).each do |date|
       next unless business_day?(date)
-      
+
       Branch.find_each do |branch|
         slot_count += generate_slots_for_branch(branch, date)
       end
     end
-    
+
     Rails.logger.info "Generated #{slot_count} slots for #{year}年#{month}月"
     slot_count
   end
-  
+
   # 特定の支店・日付に対してSlot生成
   def self.generate_slots_for_branch(branch, date)
     created_count = 0
-    
+
     TIME_SLOTS.each do |start_time, end_time|
       starts_at = Time.zone.parse("#{date} #{start_time}")
       ends_at = Time.zone.parse("#{date} #{end_time}")
-      
+
       # 既に存在する場合はスキップ
       next if Slot.exists?(branch_id: branch.id, starts_at: starts_at)
-      
+
       Slot.create!(
         branch: branch,
         starts_at: starts_at,
@@ -196,10 +196,10 @@ class SlotGeneratorService
       )
       created_count += 1
     end
-    
+
     created_count
   end
-  
+
   # 営業日判定
   def self.business_day?(date)
     return false if date.saturday?
@@ -217,18 +217,18 @@ end
 ```ruby
 class SlotGeneratorJob < ApplicationJob
   queue_as :default
-  
+
   def perform
     # 翌々月分のSlotを生成
     target_date = 2.months.from_now
-    
+
     Rails.logger.info "SlotGeneratorJob started for #{target_date.strftime('%Y年%m月')}"
-    
+
     slot_count = SlotGeneratorService.generate_for_month(
       target_date.year,
       target_date.month
     )
-    
+
     Rails.logger.info "SlotGeneratorJob completed: #{slot_count} slots created"
   rescue StandardError => e
     Rails.logger.error "SlotGeneratorJob failed: #{e.message}"
@@ -247,40 +247,40 @@ namespace :slots do
   desc "Generate initial slot data for 3 months (current + next 2 months)"
   task generate_initial: :environment do
     puts "Generating slots for 3 months..."
-    
+
     today = Date.today
     total_slots = 0
-    
+
     # 今月
     count = SlotGeneratorService.generate_for_month(today.year, today.month)
     puts "✓ Generated #{count} slots for #{today.strftime('%Y年%m月')}"
     total_slots += count
-    
+
     # 翌月
     next_month = today.next_month
     count = SlotGeneratorService.generate_for_month(next_month.year, next_month.month)
     puts "✓ Generated #{count} slots for #{next_month.strftime('%Y年%m月')}"
     total_slots += count
-    
+
     # 翌々月
     month_after_next = today.next_month.next_month
     count = SlotGeneratorService.generate_for_month(month_after_next.year, month_after_next.month)
     puts "✓ Generated #{count} slots for #{month_after_next.strftime('%Y年%m月')}"
     total_slots += count
-    
+
     puts "\nDone! Total slots: #{total_slots}"
     puts "Database total: #{Slot.count}"
   end
-  
+
   desc "Generate slots for a specific month (YEAR=2025 MONTH=3)"
   task generate_month: :environment do
     year = ENV['YEAR']&.to_i || Date.today.year
     month = ENV['MONTH']&.to_i || Date.today.month
-    
+
     count = SlotGeneratorService.generate_for_month(year, month)
     puts "Generated #{count} slots for #{year}年#{month}月"
   end
-  
+
   desc "Clear all future slots (use with caution)"
   task clear_future: :environment do
     count = Slot.where('starts_at > ?', Time.current).delete_all
@@ -297,7 +297,7 @@ end
 Rails.application.configure do
   config.good_job.tap do |good_job|
     # 既存の設定...
-    
+
     # 定期実行ジョブの設定
     good_job.cron = {
       generate_monthly_slots: {
@@ -347,29 +347,29 @@ end
 ```ruby
 class Admin::BranchesController < Admin::BaseController
   before_action :set_branch, only: [:edit, :update]
-  
+
   def index
     @areas = Area.includes(:branches).order(:id)
   end
-  
+
   def edit
   end
-  
+
   def update
     if @branch.update(branch_params)
-      redirect_to admin_branches_path, 
+      redirect_to admin_branches_path,
         notice: "#{@branch.name}の情報を更新しました。新しいデフォルト定員は、今後生成されるSlotから適用されます。"
     else
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   private
-  
+
   def set_branch
     @branch = Branch.find(params[:id])
   end
-  
+
   def branch_params
     params.require(:branch).permit(:name, :address, :phone, :open_hours, :default_capacity)
   end
@@ -390,7 +390,7 @@ end
   <% @areas.each do |area| %>
     <div class="mb-8">
       <h2 class="text-2xl font-semibold mb-4 text-gray-700"><%= area.name %></h2>
-      
+
       <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -503,43 +503,43 @@ require 'rails_helper'
 
 RSpec.describe SlotGeneratorService do
   let(:branch) { create(:branch, default_capacity: 2) }
-  
+
   describe '.business_day?' do
     it '平日はtrueを返す' do
       monday = Date.new(2025, 1, 6) # 月曜日
       expect(described_class.business_day?(monday)).to be true
     end
-    
+
     it '土曜日はfalseを返す' do
       saturday = Date.new(2025, 1, 4)
       expect(described_class.business_day?(saturday)).to be false
     end
-    
+
     it '日曜日はfalseを返す' do
       sunday = Date.new(2025, 1, 5)
       expect(described_class.business_day?(sunday)).to be false
     end
-    
+
     it '祝日はfalseを返す' do
       new_year = Date.new(2025, 1, 1) # 元日
       expect(described_class.business_day?(new_year)).to be false
     end
   end
-  
+
   describe '.generate_slots_for_branch' do
     let(:business_day) { Date.new(2025, 1, 6) } # 月曜日
-    
+
     it '営業日に13個の時間枠を生成する' do
       expect {
         described_class.generate_slots_for_branch(branch, business_day)
       }.to change { Slot.count }.by(13)
     end
-    
+
     it '生成されたSlotのcapacityはbranch.default_capacityと一致する' do
       described_class.generate_slots_for_branch(branch, business_day)
       expect(Slot.last.capacity).to eq(2)
     end
-    
+
     it '既存のSlotは重複生成しない' do
       described_class.generate_slots_for_branch(branch, business_day)
       expect {
@@ -547,20 +547,20 @@ RSpec.describe SlotGeneratorService do
       }.not_to change { Slot.count }
     end
   end
-  
+
   describe '.generate_for_month' do
     it '指定月の営業日分のSlotを生成する' do
       # 2025年1月は22営業日（土日祝を除く）
       # 22日 × 13枠/日 × 支店数
       branch_count = Branch.count
       expected_count = 22 * 13 * branch_count
-      
+
       described_class.generate_for_month(2025, 1)
-      
+
       january_slots = Slot.where(
         starts_at: Date.new(2025, 1, 1).beginning_of_day..Date.new(2025, 1, 31).end_of_day
       )
-      
+
       expect(january_slots.count).to eq(expected_count)
     end
   end
@@ -576,46 +576,46 @@ require 'rails_helper'
 
 RSpec.describe "Admin::Branches", type: :request do
   let(:branch) { create(:branch, default_capacity: 1) }
-  
+
   # Basic認証のヘルパー
   def basic_auth
     username = ENV.fetch('BASIC_AUTH_USER', 'admin')
     password = ENV.fetch('BASIC_AUTH_PASSWORD', 'password')
     { 'HTTP_AUTHORIZATION' => ActionController::HttpAuthentication::Basic.encode_credentials(username, password) }
   end
-  
+
   describe "GET /admin/branches" do
     it "支店一覧が表示される" do
       get admin_branches_path, headers: basic_auth
       expect(response).to have_http_status(:success)
     end
   end
-  
+
   describe "GET /admin/branches/:id/edit" do
     it "支店編集画面が表示される" do
       get edit_admin_branch_path(branch), headers: basic_auth
       expect(response).to have_http_status(:success)
     end
   end
-  
+
   describe "PATCH /admin/branches/:id" do
     context "有効なパラメータの場合" do
       it "支店情報が更新される" do
-        patch admin_branch_path(branch), 
+        patch admin_branch_path(branch),
           params: { branch: { default_capacity: 3 } },
           headers: basic_auth
-        
+
         expect(branch.reload.default_capacity).to eq(3)
         expect(response).to redirect_to(admin_branches_path)
       end
     end
-    
+
     context "無効なパラメータの場合" do
       it "更新に失敗する" do
         patch admin_branch_path(branch),
           params: { branch: { default_capacity: 0 } },
           headers: basic_auth
-        
+
         expect(branch.reload.default_capacity).to eq(1)
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -782,7 +782,7 @@ bundle exec bundle-audit check --update
 ### Data Model Hierarchy
 
 ```
-Area (8 regions) 
+Area (8 regions)
   ↓
 Branch (1 per area, default_capacity設定可能)
   ↓
@@ -1486,6 +1486,6 @@ bin/dev
 
 ---
 
-**ドキュメントバージョン**: 2.0  
-**最終更新日**: 2024年12月  
+**ドキュメントバージョン**: 2.0
+**最終更新日**: 2024年12月
 **未実装機能**: Phase 1-4（Implementation Roadmapを参照）
