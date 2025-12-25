@@ -72,4 +72,6 @@ gem "shoulda-matchers", "~> 6.5", :group => :test
 
 gem "good_job", "~> 4.11"
 
+gem "holiday_jp"
+
 gem "letter_opener_web", "~> 3.0", :group => :development
