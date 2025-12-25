@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       end
     end
     resources :prints, only: [:index]
+    resources :branches, only: [:index, :edit, :update]
   end
   
   # 開発環境でのみletter_openerをマウント
