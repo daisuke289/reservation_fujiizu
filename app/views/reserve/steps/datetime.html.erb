@@ -63,9 +63,8 @@
               <!-- 時間スロット -->
               <div class="space-y-2">
                 <% slots.each do |slot| %>
-                  <%= link_to reserve_steps_path,
+                  <%= link_to reserve_steps_next_path(current_step: 'datetime', slot_id: slot.id),
                       method: :post,
-                      params: { current_step: 'datetime', slot_id: slot.id },
                       class: "block w-full" do %>
                     <div class="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-green-500 hover:bg-green-50 transition-all duration-200 group">
                       <div class="text-sm font-semibold text-gray-800 group-hover:text-green-800">
@@ -98,9 +97,8 @@
               <!-- 時間スロット（グリッド表示） -->
               <div class="grid grid-cols-2 gap-3">
                 <% slots.each do |slot| %>
-                  <%= link_to reserve_steps_path,
+                  <%= link_to reserve_steps_next_path(current_step: 'datetime', slot_id: slot.id),
                       method: :post,
-                      params: { current_step: 'datetime', slot_id: slot.id },
                       class: "block" do %>
                     <div class="bg-white border border-gray-200 rounded-lg p-4 text-center hover:border-green-500 hover:bg-green-50 transition-all duration-200 group">
                       <div class="text-lg font-bold text-gray-800 group-hover:text-green-800 mb-1">
@@ -138,7 +136,7 @@
               text: '支店選択に戻る',
               variant: 'primary',
               size: 'lg',
-              url: reserve_steps_path(area_id: @branch.area_id) %>
+              url: reserve_steps_branch_path(area_id: @branch.area_id) %>
         </div>
       </div>
     <% end %>
@@ -150,7 +148,7 @@
         text: '支店選択に戻る',
         variant: 'outline-secondary',
         size: 'lg',
-        url: reserve_steps_path(area_id: @branch.area_id),
+        url: reserve_steps_branch_path(area_id: @branch.area_id),
         icon: 'fas fa-arrow-left' %>
     
     <%= render 'shared/btn',
