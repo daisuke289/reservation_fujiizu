@@ -36,23 +36,21 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <% @areas.each do |area| %>
         <div class="group">
-          <%= link_to reserve_steps_next_path(current_step: 'area', area_id: area.id),
+          <%= button_to reserve_steps_next_path(current_step: 'area', area_id: area.id),
               method: :post,
-              class: "block" do %>
-            <div class="bg-white border-2 border-gray-200 rounded-lg p-6 text-center transition-all duration-200 group-hover:border-green-500 group-hover:shadow-lg group-hover:scale-105">
-              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200">
-                <i class="fas fa-map-marker-alt text-2xl text-green-600"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-800 mb-2"><%= area.name %></h3>
-              <p class="text-sm text-gray-600">
-                支店数: <%= area.branches.count %>店舗
-              </p>
-              <div class="mt-4">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 group-hover:bg-green-200">
-                  選択する
-                  <i class="fas fa-arrow-right ml-2"></i>
-                </span>
-              </div>
+              class: "w-full text-left bg-white border-2 border-gray-200 rounded-lg p-6 text-center transition-all duration-200 hover:border-green-500 hover:shadow-lg hover:scale-105 cursor-pointer" do %>
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 hover:bg-green-200">
+              <i class="fas fa-map-marker-alt text-2xl text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2"><%= area.name %></h3>
+            <p class="text-sm text-gray-600">
+              支店数: <%= area.branches.count %>店舗
+            </p>
+            <div class="mt-4">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200">
+                選択する
+                <i class="fas fa-arrow-right ml-2"></i>
+              </span>
             </div>
           <% end %>
         </div>
