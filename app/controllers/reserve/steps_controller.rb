@@ -50,11 +50,13 @@ class Reserve::StepsController < ApplicationController
       redirect_to reserve_steps_area_path, alert: '日時を選択してください'
       return
     end
-    
+
     @appointment_types = AppointmentType.order(:name)
     @appointment = build_appointment_from_session
-    
+
     session[:reservation][:slot_id] = @slot.id
+    Rails.logger.info "🔵 CUSTOMER action - Set session[:reservation][:slot_id] = #{@slot.id}"
+    Rails.logger.info "🔵 CUSTOMER action - Full session: #{session[:reservation].inspect}"
   end
   
   # 次のステップへ進む処理
@@ -67,11 +69,24 @@ class Reserve::StepsController < ApplicationController
     when 'datetime'
       redirect_to reserve_steps_customer_path(slot_id: params[:slot_id])
     when 'customer'
+      Rails.logger.info "🟡 NEXT action (customer) - Session: #{session[:reservation].inspect}"
+
       if save_customer_info
         redirect_to reserve_confirm_path
       else
+        slot_id = session[:reservation][:slot_id]
+        Rails.logger.info "🔴 NEXT action - Validation failed, slot_id from session: #{slot_id.inspect}"
+
+        unless slot_id
+          Rails.logger.error "❌ NEXT action - slot_id is nil! Redirecting to area page"
+          redirect_to reserve_steps_area_path, alert: 'セッションが切れました。最初からやり直してください。'
+          return
+        end
+
         @appointment_types = AppointmentType.order(:name)
-        @appointment = build_appointment_from_session
+        # Don't rebuild @appointment - save_customer_info already set it with user input and validation errors
+        @slot = Slot.find(slot_id)
+        Rails.logger.info "✅ NEXT action - Re-rendering customer form with errors"
         render :customer
       end
     else
@@ -133,7 +148,11 @@ class Reserve::StepsController < ApplicationController
   def save_customer_info
     @appointment = build_appointment_from_session
     @appointment.assign_attributes(customer_params)
-    
+
+    # セッションからslot_idとbranch_idを設定（バリデーションに必要）
+    @appointment.slot_id = session[:reservation][:slot_id]
+    @appointment.branch_id = session[:reservation][:branch_id]
+
     if @appointment.valid?
       session[:reservation][:customer_info] = customer_params.to_h
       true

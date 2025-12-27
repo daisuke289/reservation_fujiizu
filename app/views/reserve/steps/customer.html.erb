@@ -62,8 +62,8 @@
       padding: 'lg',
       shadow: 'lg' do %>
     
-    <%= form_with model: @appointment, 
-        url: reserve_steps_path, 
+    <%= form_with model: @appointment,
+        url: reserve_steps_next_path,
         method: :post,
         local: true,
         html: { class: "space-y-6" } do |f| %>
@@ -187,8 +187,7 @@
         
         <div class="flex items-start">
           <%= f.check_box :accept_privacy,
-              { class: "w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mt-1" },
-              { class: "hidden" } %>
+              class: "w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mt-1" %>
           <%= f.label :accept_privacy, class: "ml-3 text-lg text-gray-700 cursor-pointer" do %>
             個人情報の取り扱いに同意します
             <span class="text-red-600 ml-1">*</span>
@@ -215,7 +214,7 @@
         text: '日時選択に戻る',
         variant: 'outline-secondary',
         size: 'lg',
-        url: reserve_steps_path(branch_id: @slot.branch_id),
+        url: reserve_steps_datetime_path(branch_id: @slot.branch_id),
         icon: 'fas fa-arrow-left' %>
     
     <%= render 'shared/btn',

@@ -86,7 +86,7 @@
             <!-- 予約ボタン -->
             <div class="pt-4 border-t border-gray-200">
               <%= link_to reserve_steps_next_path(current_step: 'branch', branch_id: branch.id),
-                  method: :post,
+                  data: { turbo_method: :post },
                   class: "w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition duration-200" do %>
                 <i class="fas fa-calendar-check mr-2"></i>
                 この支店で予約する
