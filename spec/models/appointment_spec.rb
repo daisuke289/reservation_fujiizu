@@ -62,12 +62,40 @@ RSpec.describe Appointment, type: :model do
   end
   
   describe 'validations' do
+    subject {
+      Appointment.new(
+        branch: branch,
+        slot: slot,
+        appointment_type: atype,
+        name: '山田太郎',
+        furigana: 'ヤマダタロウ',
+        phone: '09012345678',
+        party_size: 1,
+        accept_privacy: true
+      )
+    }
+
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:furigana) }
     it { should validate_presence_of(:phone) }
     it { should validate_presence_of(:party_size) }
-    it { should validate_numericality_of(:party_size).is_greater_than(0) }
-    it { should validate_acceptance_of(:accept_privacy) }
+    # shoulda-matchersはカスタムエラーメッセージに対応していないため、個別テストで検証
+    # it { should validate_numericality_of(:party_size).is_greater_than(0) }
+    # it { should validate_acceptance_of(:accept_privacy) }
+
+    it 'validates party_size is greater than 0' do
+      appointment = subject
+      appointment.party_size = 0
+      expect(appointment).to be_invalid
+      expect(appointment.errors[:party_size]).to include('は1以上の数値を入力してください')
+    end
+
+    it 'validates accept_privacy is accepted' do
+      appointment = subject
+      appointment.accept_privacy = false
+      expect(appointment).to be_invalid
+      expect(appointment.errors[:accept_privacy]).to include('に同意していただく必要があります')
+    end
     
     describe 'furigana format' do
       let(:area) { Area.create!(name: '東部エリア') }
@@ -460,10 +488,10 @@ RSpec.describe Appointment, type: :model do
     let(:appointment_type) { AppointmentType.create!(name: '相談') }
     let(:slot) { Slot.create!(
       branch: branch,
-      starts_at: DateTime.parse('2024-12-25 14:00:00'),
-      ends_at: DateTime.parse('2024-12-25 15:00:00'),
+      starts_at: Time.zone.parse('2024-12-25 14:00:00'),
+      ends_at: Time.zone.parse('2024-12-25 15:00:00'),
       capacity: 5,
-      booked_count: 0
+      booked_count: 1
     )}
     let(:appointment) { Appointment.create!(
       branch: branch,

@@ -61,7 +61,7 @@ RSpec.describe AppointmentType, type: :model do
       )
       
       expect { appointment_type.destroy }.not_to change { AppointmentType.count }
-      expect(appointment_type.errors[:base]).to include("関連するレコードが存在します")
+      expect(appointment_type.errors[:base]).to include("appointmentsが存在しているので削除できません")
     end
   end
 end

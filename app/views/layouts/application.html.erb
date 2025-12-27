@@ -11,6 +11,11 @@
 
     <%= yield :head %>
 
+    <%# Google Fonts for Nexus Design %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
@@ -23,7 +28,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-gray-50">
+  <body class="min-h-screen">
     <!-- ヘッダー（高齢者向けに大きめの文字） -->
     <header class="bg-green-700 text-white shadow-lg">
       <div class="container mx-auto max-w-6xl px-4">

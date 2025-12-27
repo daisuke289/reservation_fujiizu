@@ -22,6 +22,7 @@
     padding: パディングサイズ ('sm', 'md', 'lg', 'xl') デフォルト: 'lg' (高齢者向けに余裕を持たせる)
     border: ボーダーを表示 (true/false) デフォルト: true
     bg_color: 背景色クラス デフォルト: 'bg-white'
+    glass: グラスモーフィズムを有効化 (true/false) デフォルト: false (Nexus風)
     class: 追加のCSSクラス
     
   ブロック:
@@ -37,9 +38,10 @@
   padding ||= 'lg'
   border ||= true
   bg_color ||= 'bg-white'
+  glass ||= false
   additional_class ||= ''
   footer_content ||= nil
-  
+
   # 影のクラス
   shadow_classes = {
     'none' => '',
@@ -48,7 +50,7 @@
     'lg' => 'shadow-lg',
     'xl' => 'shadow-xl'
   }
-  
+
   # パディングのクラス（高齢者向けに余裕を持たせる）
   padding_classes = {
     'sm' => 'p-4',
@@ -56,17 +58,18 @@
     'lg' => 'p-8',
     'xl' => 'p-10'
   }
-  
-  # ボーダークラス
-  border_class = border ? 'border border-gray-200' : ''
-  
-  # 最終的なクラス
+
+  # ボーダークラス（glass有効時は無効化）
+  border_class = (border && !glass) ? 'border border-gray-200' : ''
+
+  # 最終的なクラス（Nexus風グラスモーフィズム対応）
   card_classes = [
-    bg_color,
+    glass ? 'glass-card' : bg_color,
     'rounded-lg',
-    shadow_classes[shadow],
+    glass ? '' : shadow_classes[shadow],
     border_class,
     'overflow-hidden',
+    'transition-all duration-300',
     additional_class
   ].compact.join(' ')
 %>
