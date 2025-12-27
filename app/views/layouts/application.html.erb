@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) || "Sample Organization 予約システム" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gray-50">
+    <!-- ヘッダー（高齢者向けに大きめの文字） -->
+    <header class="bg-green-700 text-white shadow-lg">
+      <div class="container mx-auto max-w-6xl px-4">
+        <div class="flex items-center justify-between py-4">
+          <div>
+            <%= link_to root_path, class: "flex items-center space-x-3" do %>
+              <span class="text-2xl md:text-3xl font-bold">Sample Organization</span>
+              <span class="text-lg md:text-xl">予約システム</span>
+            <% end %>
+          </div>
+          <nav class="hidden md:flex space-x-6">
+            <% if defined?(admin_dashboard_path) && request.path.start_with?('/admin') %>
+              <%= link_to "ダッシュボード", admin_dashboard_path, class: "text-lg hover:text-green-200 transition" %>
+              <%= link_to "予約管理", admin_reservations_path, class: "text-lg hover:text-green-200 transition" %>
+            <% else %>
+              <%= link_to "ホーム", root_path, class: "text-lg hover:text-green-200 transition" %>
+              <%= link_to "予約する", reserve_steps_path, class: "text-lg hover:text-green-200 transition" %>
+            <% end %>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- フラッシュメッセージ -->
+    <% if notice.present? %>
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 text-lg" role="alert">
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+    
+    <% if alert.present? %>
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 text-lg" role="alert">
+        <p><%= alert %></p>
+      </div>
+    <% end %>
+
+    <!-- メインコンテンツ（高齢者向けに余白を大きめに） -->
+    <main class="container mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <%= yield %>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white mt-auto">
+      <div class="container mx-auto max-w-6xl px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Sample Organization</h3>
+            <p class="text-gray-300">
+              地域の皆様と共に歩む Organization として、<br>
+              安心・安全なサービスを提供いたします。
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold mb-4">営業時間</h3>
+            <p class="text-gray-300">
+              平日: 9:00 - 17:00<br>
+              土曜: 9:00 - 12:00<br>
+              日曜・祝日: 休業
+            </p>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold mb-4">お問い合わせ</h3>
+            <p class="text-gray-300">
+              電話: 0544-XX-XXXX<br>
+              FAX: 0544-XX-XXXX<br>
+              メール: info@fujiizu-ja.example.com
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+          <p class="text-gray-400">
+            &copy; <%= Date.current.year %> Sample Organization. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

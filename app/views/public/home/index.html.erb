@@ -1,0 +1,163 @@
+<% content_for :title, "Sample Organization 予約システム" %>
+
+<div class="max-w-4xl mx-auto text-center">
+  <!-- メインビジュアル -->
+  <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 md:p-12 mb-12 shadow-lg">
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <div class="flex-1 text-left">
+        <h1 class="text-4xl md:text-5xl font-bold text-green-800 mb-6 leading-tight">
+          相続相談<br>
+          <span class="text-green-600">来店予約</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+          相続のお悩みを専門スタッフが<br>
+          丁寧にサポートいたします。<br>
+          お気軽にご相談ください。
+        </p>
+        
+        <%= render 'shared/btn',
+            text: '今すぐ予約する',
+            variant: 'primary',
+            size: 'xl',
+            url: reserve_steps_path,
+            block: true,
+            icon: 'fas fa-calendar-check' %>
+      </div>
+      
+      <div class="flex-shrink-0">
+        <div class="w-64 h-64 bg-green-200 rounded-full flex items-center justify-center">
+          <i class="fas fa-handshake text-6xl text-green-600"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- サービス案内 -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <%= render 'shared/card', 
+        title: '相続手続き相談',
+        padding: 'lg',
+        shadow: 'md' do %>
+      <div class="text-center">
+        <i class="fas fa-file-alt text-4xl text-green-600 mb-4"></i>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          相続手続きに関する<br>
+          様々なご相談を<br>
+          承っております。
+        </p>
+      </div>
+    <% end %>
+
+    <%= render 'shared/card',
+        title: '遺言書作成支援',
+        padding: 'lg',
+        shadow: 'md' do %>
+      <div class="text-center">
+        <i class="fas fa-pen-fancy text-4xl text-green-600 mb-4"></i>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          遺言書の作成方法や<br>
+          注意点について<br>
+          詳しくご説明します。
+        </p>
+      </div>
+    <% end %>
+
+    <%= render 'shared/card',
+        title: '資産活用相談',
+        padding: 'lg',
+        shadow: 'md' do %>
+      <div class="text-center">
+        <i class="fas fa-chart-line text-4xl text-green-600 mb-4"></i>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          相続財産の有効活用や<br>
+          税務対策について<br>
+          アドバイスいたします。
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 予約の流れ -->
+  <%= render 'shared/card',
+      title: '予約の流れ',
+      subtitle: '簡単3ステップでご予約いただけます',
+      padding: 'lg',
+      shadow: 'lg' do %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-2xl font-bold text-green-600">1</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">エリア・支店選択</h3>
+        <p class="text-lg text-gray-600">
+          ご希望のエリアと<br>
+          支店をお選びください
+        </p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-2xl font-bold text-green-600">2</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">日時選択</h3>
+        <p class="text-lg text-gray-600">
+          ご都合の良い<br>
+          日時をお選びください
+        </p>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="text-2xl font-bold text-green-600">3</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">お客様情報入力</h3>
+        <p class="text-lg text-gray-600">
+          必要事項をご入力いただき<br>
+          予約完了です
+        </p>
+      </div>
+    </div>
+    
+    <div class="mt-8">
+      <%= render 'shared/btn',
+          text: '予約を開始する',
+          variant: 'primary',
+          size: 'xl',
+          url: reserve_steps_path,
+          block: true %>
+    </div>
+  <% end %>
+
+  <!-- 注意事項 -->
+  <div class="mt-12 text-left">
+    <%= render 'shared/card',
+        title: 'ご予約に関するご注意',
+        padding: 'lg',
+        shadow: 'md',
+        bg_color: 'bg-blue-50' do %>
+      <div class="space-y-4 text-lg text-gray-700 leading-relaxed">
+        <div class="flex items-start gap-3">
+          <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+          <p>ご予約は来店日の<strong>3営業日前まで</strong>にお申し込みください。</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <i class="fas fa-clock text-blue-600 mt-1"></i>
+          <p>相談時間は<strong>約60分</strong>を予定しております。</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <i class="fas fa-file-text text-blue-600 mt-1"></i>
+          <p>相談内容に関する<strong>資料</strong>をお持ちいただくと、より具体的なアドバイスが可能です。</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <i class="fas fa-phone text-blue-600 mt-1"></i>
+          <p>ご不明な点がございましたら、お気軽に各支店まで<strong>お電話</strong>でお問い合わせください。</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Font Awesome CDN (アイコン表示用) -->
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<% end %>

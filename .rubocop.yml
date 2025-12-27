@@ -1,0 +1,64 @@
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# ドキュメントファイルは除外
+AllCops:
+  Exclude:
+    - '**/*.md'
+
+# Overwrite or add rules to create your own house style
+# 実務で回るレベルに調整：過度に厳しいスタイルチェックを緩和
+
+# ドキュメント中心のPRで開発が止まらないよう、スタイルのみの問題は許容
+Style/StringLiterals:
+  Enabled: false  # シングル/ダブルクォートの統一は強制しない
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false  # 補間内の文字列リテラルも強制しない
+
+Style/HashSyntax:
+  Enabled: false  # ハッシュ記法（古い形式と新しい形式）の統一は強制しない
+
+Style/RedundantReturn:
+  Enabled: false  # return文の有無はコードの可読性に応じて判断
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false  # 配列内のスペースは開発者の判断に任せる
+
+Layout/TrailingWhitespace:
+  Enabled: false  # 行末空白のチェックを無効化
+
+Layout/TrailingEmptyLines:
+  Enabled: false  # ファイル末尾の改行チェックを無効化
+
+Layout/SpaceAfterComma:
+  Enabled: false  # カンマ後のスペースは強制しない
+
+Layout/EndAlignment:
+  Enabled: false  # endの位置揃えは強制しない
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false  # ブロック周りの空行は強制しない
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false  # クラス周りの空行は強制しない
+
+Layout/LineLength:
+  Max: 120  # 80文字は厳しすぎるため120文字まで許容
+  AllowedPatterns: ['^#']  # コメント行は除外
+
+Style/Documentation:
+  Enabled: false  # ドキュメントコメントは必須としない（小規模プロジェクト）
+
+Style/FrozenStringLiteralComment:
+  Enabled: false  # frozen_string_literal コメントは強制しない
+
+# セキュリティや重要なコード品質に関わるものは有効化
+Lint/Debugger:
+  Enabled: true  # debugger残しは検出
+
+Lint/UnusedMethodArgument:
+  Enabled: true  # 未使用の引数は検出
+
+Rails/Output:
+  Enabled: false  # Rakeタスクなどでのputs使用を許可

@@ -1,0 +1,89 @@
+<% content_for :title, "エリア選択 - Sample Organization 予約システム" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- 進捗表示 -->
+  <div class="mb-8">
+    <div class="flex items-center justify-center space-x-4 mb-4">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
+        <span class="ml-2 text-lg font-semibold text-green-600">エリア選択</span>
+      </div>
+      <div class="w-8 h-1 bg-gray-300"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-gray-300 text-gray-500 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+        <span class="ml-2 text-lg text-gray-500">支店選択</span>
+      </div>
+      <div class="w-8 h-1 bg-gray-300"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-gray-300 text-gray-500 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+        <span class="ml-2 text-lg text-gray-500">日時選択</span>
+      </div>
+      <div class="w-8 h-1 bg-gray-300"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-gray-300 text-gray-500 rounded-full flex items-center justify-center font-bold text-lg">4</div>
+        <span class="ml-2 text-lg text-gray-500">お客様情報</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <%= render 'shared/card',
+      title: 'エリアを選択してください',
+      subtitle: 'ご希望の相談エリアをお選びください',
+      padding: 'lg',
+      shadow: 'lg' do %>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <% @areas.each do |area| %>
+        <div class="group">
+          <%= button_to reserve_steps_next_path(current_step: 'area', area_id: area.id),
+              method: :post,
+              class: "w-full text-left bg-white border-2 border-gray-200 rounded-lg p-6 text-center transition-all duration-200 hover:border-green-500 hover:shadow-lg hover:scale-105 cursor-pointer" do %>
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 hover:bg-green-200">
+              <i class="fas fa-map-marker-alt text-2xl text-green-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2"><%= area.name %></h3>
+            <p class="text-sm text-gray-600">
+              支店数: <%= area.branches.count %>店舗
+            </p>
+            <div class="mt-4">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 hover:bg-green-200">
+                選択する
+                <i class="fas fa-arrow-right ml-2"></i>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    
+    <% if @areas.empty? %>
+      <div class="text-center py-12">
+        <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+        <p class="text-xl text-gray-600 mb-6">
+          現在、ご利用可能なエリアがありません。
+        </p>
+        <%= render 'shared/btn',
+            text: 'ホームに戻る',
+            variant: 'secondary',
+            size: 'lg',
+            url: root_path %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <!-- 戻るボタン -->
+  <div class="mt-8 text-center">
+    <%= render 'shared/btn',
+        text: 'ホームに戻る',
+        variant: 'outline-secondary',
+        size: 'lg',
+        url: root_path,
+        icon: 'fas fa-arrow-left' %>
+  </div>
+</div>
+
+<!-- Font Awesome CDN -->
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<% end %>

@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  branch: one
+  slot: one
+  appointment_type: one
+  name: MyString
+  furigana: MyString
+  phone: MyString
+  email: MyString
+  party_size: 1
+  purpose: MyText
+  notes: MyText
+  accept_privacy: false
+  status: 1
+
+two:
+  branch: two
+  slot: two
+  appointment_type: two
+  name: MyString
+  furigana: MyString
+  phone: MyString
+  email: MyString
+  party_size: 1
+  purpose: MyText
+  notes: MyText
+  accept_privacy: false
+  status: 1

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ご予約確認のお知らせ</title>
+  <style>
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background-color: #16a34a;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .content {
+      padding: 30px 20px;
+    }
+    .reception-number {
+      background-color: #dcfce7;
+      border: 2px solid #16a34a;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .reception-number .label {
+      font-size: 16px;
+      color: #15803d;
+      margin-bottom: 10px;
+    }
+    .reception-number .number {
+      font-size: 32px;
+      font-weight: bold;
+      color: #15803d;
+      letter-spacing: 2px;
+    }
+    .info-section {
+      margin: 30px 0;
+      border-left: 4px solid #16a34a;
+      padding-left: 15px;
+    }
+    .info-section h3 {
+      color: #16a34a;
+      margin: 0 0 15px 0;
+      font-size: 18px;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .info-table th,
+    .info-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    .info-table th {
+      background-color: #f3f4f6;
+      font-weight: bold;
+      width: 30%;
+      color: #374151;
+    }
+    .info-table td {
+      color: #1f2937;
+    }
+    .highlight {
+      background-color: #fef3c7;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .highlight strong {
+      color: #92400e;
+    }
+    .documents {
+      background-color: #dbeafe;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .documents h4 {
+      color: #1e40af;
+      margin: 0 0 15px 0;
+    }
+    .documents ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .documents li {
+      margin-bottom: 8px;
+      color: #1e3a8a;
+    }
+    .footer {
+      background-color: #f3f4f6;
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .contact-info {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ヘッダー -->
+    <div class="header">
+      <h1>ご予約確認のお知らせ</h1>
+      <p>Sample Organization</p>
+    </div>
+
+    <!-- コンテンツ -->
+    <div class="content">
+      <p><%= @appointment.name %> 様</p>
+
+      <p>このたびは相続相談の来店予約をいただき、誠にありがとうございます。</p>
+
+      <p>
+        ◆ ご予約内容<br>
+        日時: <%= l(@appointment.slot.starts_at, format: :long) %><br>
+        支店: <%= @appointment.branch.name %><br>
+        人数: <%= @appointment.party_size || 1 %><br>
+        目的: <%= @appointment.appointment_type.name %>
+      </p>
+
+      <p>
+        ◆ 持参書類<br>
+        - 死亡診断書<br>
+        - 戸籍謄本<br>
+        - 通帳<br>
+        - 届出印<br>
+        - 本人確認書類
+      </p>
+
+      <p>変更やキャンセルは前営業日15時までに、直接お電話でお願いいたします。</p>
+    </div>
+
+    <!-- フッター -->
+    <div class="footer">
+      <p>
+        Sample Organization<br>
+        このメールは送信専用です。返信いただいてもお答えできません。
+      </p>
+    </div>
+  </div>
+</body>
+</html>

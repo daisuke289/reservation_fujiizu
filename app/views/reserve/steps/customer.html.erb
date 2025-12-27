@@ -1,0 +1,231 @@
+<% content_for :title, "お客様情報入力 - Sample Organization 予約システム" %>
+
+<div class="max-w-4xl mx-auto">
+  <!-- 進捗表示 -->
+  <div class="mb-8">
+    <div class="flex items-center justify-center space-x-4 mb-4">
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
+        <span class="ml-2 text-lg text-green-600">エリア選択</span>
+      </div>
+      <div class="w-8 h-1 bg-green-600"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
+        <span class="ml-2 text-lg text-green-600">支店選択</span>
+      </div>
+      <div class="w-8 h-1 bg-green-600"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
+        <span class="ml-2 text-lg text-green-600">日時選択</span>
+      </div>
+      <div class="w-8 h-1 bg-green-600"></div>
+      <div class="flex items-center">
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
+        <span class="ml-2 text-lg font-semibold text-green-600">お客様情報</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 選択内容の確認 -->
+  <div class="mb-6">
+    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+      <h3 class="text-lg font-semibold text-green-800 mb-3">
+        <i class="fas fa-check-circle mr-2"></i>
+        ご予約内容
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div>
+          <span class="font-semibold text-gray-700">支店:</span>
+          <span class="text-gray-800 ml-1"><%= @slot.branch.name %></span>
+        </div>
+        <div>
+          <span class="font-semibold text-gray-700">日付:</span>
+          <span class="text-gray-800 ml-1"><%= @slot.starts_at.strftime('%Y年%-m月%-d日（%a）') %></span>
+        </div>
+        <div>
+          <span class="font-semibold text-gray-700">時間:</span>
+          <span class="text-gray-800 ml-1"><%= @slot.starts_at.strftime('%H:%M') %> - <%= @slot.ends_at.strftime('%H:%M') %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- エラー表示 -->
+  <% if @appointment.errors.any? %>
+    <%= render 'shared/form_error', model: @appointment %>
+  <% end %>
+
+  <!-- メインフォーム -->
+  <%= render 'shared/card',
+      title: 'お客様情報をご入力ください',
+      subtitle: '必須項目は必ずご入力ください',
+      padding: 'lg',
+      shadow: 'lg' do %>
+    
+    <%= form_with model: @appointment,
+        url: reserve_steps_next_path,
+        method: :post,
+        local: true,
+        html: { class: "space-y-6" } do |f| %>
+      
+      <%= hidden_field_tag :current_step, 'customer' %>
+      
+      <!-- 氏名 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :name, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            お名前
+            <span class="text-red-600 ml-1">*</span>
+          <% end %>
+          <%= f.text_field :name,
+              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              placeholder: "例: 山田太郎" %>
+        </div>
+        
+        <div>
+          <%= f.label :furigana, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            フリガナ
+            <span class="text-red-600 ml-1">*</span>
+          <% end %>
+          <%= f.text_field :furigana,
+              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              placeholder: "例: ヤマダタロウ" %>
+          <p class="mt-1 text-sm text-gray-600">全角カタカナでご入力ください</p>
+        </div>
+      </div>
+      
+      <!-- 連絡先 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :phone, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            電話番号
+            <span class="text-red-600 ml-1">*</span>
+          <% end %>
+          <%= f.telephone_field :phone,
+              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              placeholder: "例: 09012345678" %>
+          <p class="mt-1 text-sm text-gray-600">ハイフンなしの10〜11桁の数字でご入力ください</p>
+        </div>
+        
+        <div>
+          <%= f.label :email, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            メールアドレス
+            <span class="text-gray-500 text-sm ml-1">（任意）</span>
+          <% end %>
+          <%= f.email_field :email,
+              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              placeholder: "例: yamada@example.com" %>
+          <p class="mt-1 text-sm text-gray-600">確認メールをお送りします</p>
+        </div>
+      </div>
+      
+      <!-- 相談種別と人数 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :appointment_type_id, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            相談種別
+            <span class="text-red-600 ml-1">*</span>
+          <% end %>
+          <%= f.select :appointment_type_id,
+              options_from_collection_for_select(@appointment_types, :id, :name, @appointment.appointment_type_id),
+              { prompt: '選択してください' },
+              { class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
+        </div>
+        
+        <div>
+          <%= f.label :party_size, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+            ご来店人数
+            <span class="text-gray-500 text-sm ml-1">（任意）</span>
+          <% end %>
+          <%= f.select :party_size,
+              options_for_select((1..4).map { |i| [i, i] }, @appointment.party_size),
+              { prompt: '選択してください' },
+              { class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
+          <p class="mt-1 text-sm text-gray-600">ご同伴者がいらっしゃる場合にご入力ください</p>
+        </div>
+      </div>
+      
+      <!-- 相談内容 -->
+      <div>
+        <%= f.label :purpose, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+          ご相談内容
+          <span class="text-gray-500 text-sm ml-1">（任意）</span>
+        <% end %>
+        <%= f.text_area :purpose,
+            rows: 4,
+            class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
+            placeholder: "具体的なご相談内容やご質問がございましたらご記入ください" %>
+        <p class="mt-1 text-sm text-gray-600">事前にお聞かせいただくことで、より具体的なアドバイスが可能です</p>
+      </div>
+      
+      <!-- 備考 -->
+      <div>
+        <%= f.label :notes, class: "block text-lg font-semibold text-gray-700 mb-2" do %>
+          その他・ご要望
+          <span class="text-gray-500 text-sm ml-1">（任意）</span>
+        <% end %>
+        <%= f.text_area :notes,
+            rows: 3,
+            class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
+            placeholder: "車椅子でのご来店、お子様連れ等、特別なご配慮が必要な場合はお知らせください" %>
+      </div>
+      
+      <!-- 個人情報同意 -->
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+        <h4 class="text-lg font-semibold text-gray-800 mb-4">個人情報の取り扱いについて</h4>
+        <div class="text-sm text-gray-700 space-y-2 mb-4">
+          <p>お預かりした個人情報は、以下の目的でのみ使用いたします：</p>
+          <ul class="list-disc list-inside ml-4 space-y-1">
+            <li>予約の確認・管理</li>
+            <li>相談内容に関するご連絡</li>
+            <li>当組合のサービス向上のための統計分析</li>
+          </ul>
+          <p class="mt-3">
+            個人情報は適切に管理し、お客様の同意なく第三者に提供することはありません。
+          </p>
+        </div>
+        
+        <div class="flex items-start">
+          <%= f.check_box :accept_privacy,
+              class: "w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mt-1" %>
+          <%= f.label :accept_privacy, class: "ml-3 text-lg text-gray-700 cursor-pointer" do %>
+            個人情報の取り扱いに同意します
+            <span class="text-red-600 ml-1">*</span>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- 送信ボタン -->
+      <div class="flex flex-col sm:flex-row gap-4 pt-6">
+        <%= render 'shared/btn',
+            text: '入力内容を確認する',
+            variant: 'primary',
+            size: 'xl',
+            type: 'submit',
+            block: true,
+            icon: 'fas fa-arrow-right' %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <!-- ナビゲーションボタン -->
+  <div class="mt-8 flex justify-between">
+    <%= render 'shared/btn',
+        text: '日時選択に戻る',
+        variant: 'outline-secondary',
+        size: 'lg',
+        url: reserve_steps_datetime_path(branch_id: @slot.branch_id),
+        icon: 'fas fa-arrow-left' %>
+    
+    <%= render 'shared/btn',
+        text: 'ホームに戻る',
+        variant: 'secondary',
+        size: 'lg',
+        url: root_path %>
+  </div>
+</div>
+
+<!-- Font Awesome CDN -->
+<% content_for :head do %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<% end %>

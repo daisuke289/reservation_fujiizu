@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title><%= content_for(:title) || "管理画面 - Sample Organization 予約システム" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gray-100">
+    <!-- ヘッダー -->
+    <header class="bg-blue-900 text-white shadow-lg">
+      <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between py-3">
+          <div class="flex items-center space-x-4">
+            <%= link_to admin_dashboard_path, class: "flex items-center space-x-2 hover:text-blue-200" do %>
+              <span class="text-xl font-bold">Sample Org</span>
+              <span class="text-lg">管理画面</span>
+            <% end %>
+          </div>
+          
+          <nav class="flex space-x-6">
+            <%= link_to "ダッシュボード", admin_dashboard_path, 
+                class: "hover:text-blue-200 transition #{current_page?(admin_dashboard_path) ? 'text-blue-200 font-semibold' : ''}" %>
+            <%= link_to "予約管理", admin_appointments_path, 
+                class: "hover:text-blue-200 transition #{current_page?(admin_appointments_path) ? 'text-blue-200 font-semibold' : ''}" %>
+            <%= link_to "印刷", admin_prints_path, 
+                class: "hover:text-blue-200 transition #{current_page?(admin_prints_path) ? 'text-blue-200 font-semibold' : ''}" %>
+            <%= link_to "サイトトップ", root_path, 
+                class: "hover:text-blue-200 transition", target: "_blank" %>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- フラッシュメッセージ -->
+    <% if notice.present? %>
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+    
+    <% if alert.present? %>
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+        <p><%= alert %></p>
+      </div>
+    <% end %>
+
+    <!-- メインコンテンツ -->
+    <main class="container mx-auto px-4 py-6">
+      <%= yield %>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white mt-auto py-4">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; <%= Date.current.year %> Sample Organization 管理システム</p>
+      </div>
+    </footer>
+  </body>
+</html>

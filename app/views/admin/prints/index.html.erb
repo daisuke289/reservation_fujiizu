@@ -1,0 +1,94 @@
+<% content_for :title, "印刷 - 予約管理" %>
+
+<div class="header">
+  <h1>Sample Organization</h1>
+  <h2>予約一覧表</h2>
+  <div class="print-date">
+    印刷日時: <%= Time.current.strftime('%Y年%-m月%-d日 %H:%M') %>
+  </div>
+</div>
+
+<% @appointments_by_branch.each_with_index do |branch_data, index| %>
+  <% branch = branch_data[:branch] %>
+  <% appointments = branch_data[:appointments] %>
+  
+  <div class="branch-section <%= 'page-break' if index > 0 %>">
+    <div class="branch-title">
+      <%= branch.name %> - <%= @target_date.strftime('%Y年%-m月%-d日') %>（<%= %w[日 月 火 水 木 金 土][@target_date.wday] %>曜日）
+      - 合計 <%= appointments.count %>件
+    </div>
+    
+    <% if appointments.any? %>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 10%">受付番号</th>
+            <th style="width: 15%">時間</th>
+            <th style="width: 20%">お客様名</th>
+            <th style="width: 15%">電話番号</th>
+            <th style="width: 15%">相談種別</th>
+            <th style="width: 8%">人数</th>
+            <th style="width: 12%">ステータス</th>
+            <th style="width: 5%">メモ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% appointments.each do |appointment| %>
+            <tr>
+              <td><%= format('%08d', appointment.id) %></td>
+              <td>
+                <%= appointment.slot.starts_at.strftime('%H:%M') %>-<%= appointment.slot.ends_at.strftime('%H:%M') %>
+              </td>
+              <td>
+                <strong><%= appointment.name %></strong><br>
+                <small><%= appointment.furigana %></small>
+              </td>
+              <td>
+                <% phone = appointment.phone %>
+                <%= phone.gsub(/(\d{3})(\d{4})(\d{4})/, '\1-\2-\3') if phone.length == 11 %>
+                <%= phone.gsub(/(\d{4})(\d{2})(\d{4})/, '\1-\2-\3') if phone.length == 10 %>
+              </td>
+              <td><%= appointment.appointment_type.name %></td>
+              <td><%= appointment.party_size %>名</td>
+              <td>
+                <%= case appointment.status
+                    when 'booked' then '予約済み'
+                    when 'visited' then '来店済み'
+                    when 'needs_followup' then 'フォローアップ'
+                    when 'canceled' then 'キャンセル'
+                    end %>
+              </td>
+              <td>
+                <%= appointment.admin_memo.present? ? '有' : '' %>
+              </td>
+            </tr>
+            <% if appointment.purpose.present? || appointment.notes.present? %>
+              <tr>
+                <td colspan="8" style="background-color: #f9f9f9; padding: 2px 6px; font-size: 10pt;">
+                  <% if appointment.purpose.present? %>
+                    <strong>相談内容:</strong> <%= truncate(appointment.purpose, length: 100) %>
+                  <% end %>
+                  <% if appointment.notes.present? %>
+                    <strong>要望:</strong> <%= truncate(appointment.notes, length: 100) %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div style="text-align: center; padding: 20px; color: #666;">
+        該当する予約はありません
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @appointments_by_branch.empty? %>
+  <div class="branch-section">
+    <div style="text-align: center; padding: 40px; color: #666;">
+      <%= @target_date.strftime('%Y年%-m月%-d日') %>の予約はありません
+    </div>
+  </div>
+<% end %>
