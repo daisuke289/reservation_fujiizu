@@ -16,13 +16,15 @@ RSpec.describe Slot, type: :model do
   end
   
   describe 'custom validations' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '001',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     
     describe '#ends_at_after_starts_at' do
@@ -98,13 +100,15 @@ RSpec.describe Slot, type: :model do
   end
   
   describe 'scopes' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '001',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     
     describe '.available' do
@@ -151,13 +155,15 @@ RSpec.describe Slot, type: :model do
   end
   
   describe 'instance methods' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '001',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     let(:slot) { Slot.create!(
       branch: branch,

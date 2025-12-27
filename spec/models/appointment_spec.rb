@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Appointment, type: :model do
-  let!(:area)   { Area.create!(name: "テスト地区") }
-  let!(:branch) { Branch.create!(area:, name: "テスト支店", address: "住所", phone: "05599900000", open_hours: "平日") }
+  let!(:area)   { Area.create!(name: "テスト地区", display_order: 1, is_active: true) }
+  let!(:branch) { Branch.create!(area:, code: "001", name: "テスト支店", address: "住所", phone: "05599900000", open_hours: "平日", default_capacity: 1) }
   let!(:atype)  { AppointmentType.create!(name: "事前相談") }
   let!(:slot)   { Slot.create!(branch:, starts_at: Time.zone.parse("2099-01-01 10:00"), ends_at: Time.zone.parse("2099-01-01 10:30"), capacity: 4, booked_count: 0) }
 
@@ -98,13 +98,15 @@ RSpec.describe Appointment, type: :model do
     end
     
     describe 'furigana format' do
-      let(:area) { Area.create!(name: '東部エリア') }
+      let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
       let(:branch) { Branch.create!(
         area: area,
+        code: '002',
         name: '富士支店',
         address: '静岡県富士市',
         phone: '0544123456',
-        open_hours: '平日 9:00-17:00'
+        open_hours: '平日 9:00-17:00',
+        default_capacity: 1
       )}
       let(:appointment_type) { AppointmentType.create!(name: '相談') }
       let(:slot) { Slot.create!(
@@ -188,13 +190,15 @@ RSpec.describe Appointment, type: :model do
     end
     
     describe 'phone format' do
-      let(:area) { Area.create!(name: '東部エリア') }
+      let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
       let(:branch) { Branch.create!(
         area: area,
+        code: '002',
         name: '富士支店',
         address: '静岡県富士市',
         phone: '0544123456',
-        open_hours: '平日 9:00-17:00'
+        open_hours: '平日 9:00-17:00',
+        default_capacity: 1
       )}
       let(:appointment_type) { AppointmentType.create!(name: '相談') }
       let(:slot) { Slot.create!(
@@ -249,13 +253,15 @@ RSpec.describe Appointment, type: :model do
     end
     
     describe 'email format' do
-      let(:area) { Area.create!(name: '東部エリア') }
+      let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
       let(:branch) { Branch.create!(
         area: area,
+        code: '002',
         name: '富士支店',
         address: '静岡県富士市',
         phone: '0544123456',
-        open_hours: '平日 9:00-17:00'
+        open_hours: '平日 9:00-17:00',
+        default_capacity: 1
       )}
       let(:appointment_type) { AppointmentType.create!(name: '相談') }
       let(:slot) { Slot.create!(
@@ -314,13 +320,15 @@ RSpec.describe Appointment, type: :model do
   end
   
   describe 'custom validations' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '003',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     let(:appointment_type) { AppointmentType.create!(name: '相談') }
     let(:slot) { Slot.create!(
@@ -424,13 +432,15 @@ RSpec.describe Appointment, type: :model do
   end
   
   describe 'callbacks' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '003',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     let(:appointment_type) { AppointmentType.create!(name: '相談') }
     let(:slot) { Slot.create!(
@@ -477,13 +487,15 @@ RSpec.describe Appointment, type: :model do
   end
   
   describe 'instance methods' do
-    let(:area) { Area.create!(name: '東部エリア') }
+    let(:area) { Area.create!(name: '東部エリア', display_order: 1, is_active: true) }
     let(:branch) { Branch.create!(
       area: area,
+      code: '003',
       name: '富士支店',
       address: '静岡県富士市',
       phone: '0544123456',
-      open_hours: '平日 9:00-17:00'
+      open_hours: '平日 9:00-17:00',
+      default_capacity: 1
     )}
     let(:appointment_type) { AppointmentType.create!(name: '相談') }
     let(:slot) { Slot.create!(

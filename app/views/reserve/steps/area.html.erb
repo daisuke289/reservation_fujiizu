@@ -65,6 +65,10 @@
             <h3 class="text-2xl font-bold mb-2" style="color: var(--text-color);"><%= area.name %></h3>
             <p class="text-base mb-4" style="color: var(--text-light);">
               支店数: <%= area.branches.count %>店舗
+              <% if area.jurisdiction.present? %>
+                <br>
+                <span class="text-sm">管轄: <%= area.jurisdiction %></span>
+              <% end %>
             </p>
 
             <span class="inline-flex items-center px-4 py-2 rounded-full text-base font-medium bg-green-100 transition-colors hover:bg-green-200" style="color: var(--primary-color);">

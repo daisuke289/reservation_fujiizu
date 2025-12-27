@@ -6,6 +6,7 @@ class Branch < ApplicationRecord
 
   # バリデーション
   validates :name, presence: true
+  validates :code, presence: true, uniqueness: true
   validates :address, presence: true
   validates :phone, presence: true,
                     format: { with: /\A\d{10,11}\z/, message: "は10〜11桁の数字で入力してください" }

@@ -18,13 +18,15 @@ RSpec.describe "Reservations (full flow)", type: :system do
   end
 
   it "各予約ステップのページが正常に表示されること" do
-    area = Area.create!(name: "テスト地区")
+    area = Area.create!(name: "テスト地区", display_order: 1, is_active: true)
     branch = Branch.create!(
       area: area,
+      code: "001",
       name: "テスト支店",
       address: "静岡県テスト市テスト町1-2-3",
       phone: "05599900000",
-      open_hours: "平日 9:00-17:00"
+      open_hours: "平日 9:00-17:00",
+      default_capacity: 1
     )
     slot = Slot.create!(
       branch: branch,

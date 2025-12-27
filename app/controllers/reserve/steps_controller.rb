@@ -10,7 +10,7 @@ class Reserve::StepsController < ApplicationController
   
   # エリア選択
   def area
-    @areas = Area.includes(:branches).order(:name)
+    @areas = Area.includes(:branches).active_ordered
   end
   
   # 支店選択
