@@ -85,3 +85,4 @@ Desktop.ini
 # Local development
 /tmp/local_secret.txt
 /tmp/restart.txt
+SESSION_NOTES.md
