@@ -7,8 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files.
+# Ignore all environment files (except .env.example)
 /.env*
+!/.env.example
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -35,3 +36,52 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.ico
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Codespace
+.claude/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local development
+/tmp/local_secret.txt
+/tmp/restart.txt
