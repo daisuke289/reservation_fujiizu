@@ -1,0 +1,215 @@
+/**
+ * Design System - Professional SaaS Design Tokens
+ *
+ * This file defines the core design tokens for the application.
+ * Based on modern SaaS design patterns (Notion, Slack, Airbnb).
+ *
+ * Last updated: 2025-12-28
+ */
+
+/* ========================================
+   1. Color System (50-900 Scale)
+   ======================================== */
+
+:root {
+  /* Primary Color (Green) - Brand Color */
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #059669;  /* Main brand color */
+  --color-primary-600: #047857;
+  --color-primary-700: #065f46;
+  --color-primary-800: #064e3b;
+  --color-primary-900: #022c22;
+
+  /* Grayscale - Neutral Colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* ========================================
+     2. Semantic Design Tokens
+     ======================================== */
+
+  /* Background Colors */
+  --bg-base: var(--color-gray-50);         /* Page background */
+  --bg-surface: #ffffff;                    /* Card/panel background */
+  --bg-elevated: #ffffff;                   /* Modal/dropdown background */
+  --bg-overlay: rgba(0, 0, 0, 0.5);        /* Overlay background */
+
+  /* Text Colors */
+  --text-primary: var(--color-gray-900);    /* Primary text */
+  --text-secondary: var(--color-gray-600);  /* Secondary text */
+  --text-tertiary: var(--color-gray-400);   /* Tertiary text */
+  --text-disabled: var(--color-gray-300);   /* Disabled text */
+  --text-inverse: #ffffff;                  /* Text on dark backgrounds */
+
+  /* Border Colors */
+  --border-subtle: var(--color-gray-200);   /* Subtle borders */
+  --border-default: var(--color-gray-300);  /* Default borders */
+  --border-strong: var(--color-gray-400);   /* Strong borders */
+
+  /* Interactive Colors */
+  --interactive-primary: var(--color-primary-500);
+  --interactive-primary-hover: var(--color-primary-600);
+  --interactive-primary-active: var(--color-primary-700);
+
+  /* ========================================
+     3. Typography Scale
+     ======================================== */
+
+  /* Font Sizes (Accessible - larger for elderly users) */
+  --font-size-h1: 2.5rem;       /* 40px */
+  --font-size-h2: 2rem;         /* 32px */
+  --font-size-h3: 1.5rem;       /* 24px */
+  --font-size-h4: 1.25rem;      /* 20px */
+  --font-size-body-lg: 1.125rem; /* 18px - Minimum for main content */
+  --font-size-body: 1rem;       /* 16px - Supplementary content only */
+  --font-size-caption: 0.875rem; /* 14px - Captions only */
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ========================================
+     4. Spacing System (8px Grid)
+     ======================================== */
+
+  /* Base Spacing Units */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-24: 6rem;     /* 96px */
+
+  /* Semantic Spacing - Components */
+  --spacing-component-sm: var(--space-3);  /* 12px */
+  --spacing-component-md: var(--space-4);  /* 16px */
+  --spacing-component-lg: var(--space-6);  /* 24px */
+
+  /* Semantic Spacing - Sections */
+  --spacing-section-sm: var(--space-8);   /* 32px */
+  --spacing-section-md: var(--space-12);  /* 48px */
+  --spacing-section-lg: var(--space-16);  /* 64px */
+
+  /* ========================================
+     5. Shadow and Elevation (Subtle & Professional)
+     ======================================== */
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* ========================================
+     6. Border and Radius
+     ======================================== */
+
+  /* Border Widths */
+  --border-width-thin: 1px;     /* Default - refined */
+  --border-width-medium: 2px;   /* Emphasis only */
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;   /* Fully rounded */
+
+  /* ========================================
+     7. Transitions and Animations
+     ======================================== */
+
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ========================================
+     8. Z-Index Scale
+     ======================================== */
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-modal: 1200;
+  --z-toast: 1300;
+  --z-tooltip: 1400;
+}
+
+/* ========================================
+   Utility Classes - Typography
+   ======================================== */
+
+.heading-1 {
+  font-size: var(--font-size-h1);
+  line-height: var(--leading-tight);
+  font-weight: var(--font-weight-bold);
+}
+
+.heading-2 {
+  font-size: var(--font-size-h2);
+  line-height: var(--leading-tight);
+  font-weight: var(--font-weight-bold);
+}
+
+.heading-3 {
+  font-size: var(--font-size-h3);
+  line-height: var(--leading-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+.heading-4 {
+  font-size: var(--font-size-h4);
+  line-height: var(--leading-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+.body-lg {
+  font-size: var(--font-size-body-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.body {
+  font-size: var(--font-size-body);
+  line-height: var(--leading-normal);
+}
+
+.caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Accessibility - Motion Preferences
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

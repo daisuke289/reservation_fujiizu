@@ -8,3 +8,6 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Design System - Core design tokens (colors, typography, spacing) */
+@import "design_system.css";

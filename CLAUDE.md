@@ -68,10 +68,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # Project Overview
 
-富士伊豆農業協同組合の相続相談予約システム。高齢者向けの来店予約WebアプリケーションとバックオフィスでのA4印刷管理機能を提供。
+富士伊豆農業協同組合の相続相談予約システム。来店予約Webアプリケーション
 
 - **Tech Stack**: Rails 8.0, PostgreSQL, Tailwind CSS, GoodJob, holiday_jp
-- **Target Users**: 高齢者、遺族、農協組合員
+- **Target Users**: 金融機関利用者
 - **Current Status**: ✅ **全機能実装完了・本番環境デプロイ可能**
 
 ## ✅ 実装完了機能（2024年12月完了）

@@ -7,10 +7,10 @@
       <%= image_tag 'illustrations/personal-info.svg', alt: 'お客様情報', class: 'w-32 h-32', loading: 'lazy' %>
     </div>
     <div class="text-center md:text-left flex-1">
-      <h1 class="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent pb-2">
+      <h1 class="heading-2 font-bold text-green-600 pb-2">
         お客様情報の入力
       </h1>
-      <p class="text-gray-600 mt-2">
+      <p class="body-lg text-gray-600 mt-2">
         ご予約に必要な情報を入力してください
       </p>
     </div>
@@ -20,23 +20,23 @@
   <div class="mb-8">
     <div class="flex items-center justify-center space-x-4 mb-4">
       <div class="flex items-center">
-        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
-        <span class="ml-2 text-lg text-green-600">エリア選択</span>
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold body-lg">✓</div>
+        <span class="ml-2 body-lg text-green-600">エリア選択</span>
       </div>
       <div class="w-8 h-1 bg-green-600"></div>
       <div class="flex items-center">
-        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
-        <span class="ml-2 text-lg text-green-600">支店選択</span>
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold body-lg">✓</div>
+        <span class="ml-2 body-lg text-green-600">支店選択</span>
       </div>
       <div class="w-8 h-1 bg-green-600"></div>
       <div class="flex items-center">
-        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">✓</div>
-        <span class="ml-2 text-lg text-green-600">日時選択</span>
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold body-lg">✓</div>
+        <span class="ml-2 body-lg text-green-600">日時選択</span>
       </div>
       <div class="w-8 h-1 bg-green-600"></div>
       <div class="flex items-center">
-        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">4</div>
-        <span class="ml-2 text-lg font-semibold text-green-600">お客様情報</span>
+        <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold body-lg">4</div>
+        <span class="ml-2 body-lg font-semibold text-green-600">お客様情報</span>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
   <!-- 選択内容の確認 -->
   <div class="mb-6">
     <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-      <h3 class="text-lg font-semibold text-green-800 mb-3">
+      <h3 class="heading-4 font-semibold text-green-800 mb-3">
         <i class="fas fa-check-circle mr-2"></i>
         ご予約内容
       </h3>
@@ -93,7 +93,7 @@
             <span class="text-red-600 ml-1">*</span>
           <% end %>
           <%= f.text_field :name,
-              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
               placeholder: "例: 山田太郎" %>
         </div>
         
@@ -103,7 +103,7 @@
             <span class="text-red-600 ml-1">*</span>
           <% end %>
           <%= f.text_field :furigana,
-              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
               placeholder: "例: ヤマダタロウ" %>
           <p class="mt-1 text-sm text-gray-600">全角カタカナでご入力ください</p>
         </div>
@@ -117,7 +117,7 @@
             <span class="text-red-600 ml-1">*</span>
           <% end %>
           <%= f.telephone_field :phone,
-              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
               placeholder: "例: 09012345678" %>
           <p class="mt-1 text-sm text-gray-600">ハイフンなしの10〜11桁の数字でご入力ください</p>
         </div>
@@ -128,7 +128,7 @@
             <span class="text-gray-500 text-sm ml-1">（任意）</span>
           <% end %>
           <%= f.email_field :email,
-              class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
+              class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors",
               placeholder: "例: yamada@example.com" %>
           <p class="mt-1 text-sm text-gray-600">確認メールをお送りします</p>
         </div>
@@ -144,7 +144,7 @@
           <%= f.select :appointment_type_id,
               options_from_collection_for_select(@appointment_types, :id, :name, @appointment.appointment_type_id),
               { prompt: '選択してください' },
-              { class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
+              { class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
         </div>
         
         <div>
@@ -155,7 +155,7 @@
           <%= f.select :party_size,
               options_for_select((1..4).map { |i| [i, i] }, @appointment.party_size),
               { prompt: '選択してください' },
-              { class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
+              { class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors" } %>
           <p class="mt-1 text-sm text-gray-600">ご同伴者がいらっしゃる場合にご入力ください</p>
         </div>
       </div>
@@ -168,7 +168,7 @@
         <% end %>
         <%= f.text_area :purpose,
             rows: 4,
-            class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
+            class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
             placeholder: "具体的なご相談内容やご質問がございましたらご記入ください" %>
         <p class="mt-1 text-sm text-gray-600">事前にお聞かせいただくことで、より具体的なアドバイスが可能です</p>
       </div>
@@ -181,7 +181,7 @@
         <% end %>
         <%= f.text_area :notes,
             rows: 3,
-            class: "w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
+            class: "w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors resize-none",
             placeholder: "車椅子でのご来店、お子様連れ等、特別なご配慮が必要な場合はお知らせください" %>
       </div>
       
@@ -202,7 +202,7 @@
         
         <div class="flex items-start">
           <%= f.check_box :accept_privacy,
-              class: "w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500 focus:ring-2 mt-1" %>
+              class: "w-5 h-5 text-green-600 border border-gray-300 rounded focus:ring-green-500 focus:ring-2 mt-1" %>
           <%= f.label :accept_privacy, class: "ml-3 text-lg text-gray-700 cursor-pointer" do %>
             個人情報の取り扱いに同意します
             <span class="text-red-600 ml-1">*</span>

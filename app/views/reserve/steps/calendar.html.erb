@@ -9,15 +9,15 @@
         <%= image_tag 'illustrations/calendar.svg', alt: 'カレンダー', class: 'w-40 h-40', loading: 'lazy' %>
       </div>
       <div class="text-center md:text-left flex-1">
-        <h2 class="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent pb-2">
+        <h2 class="heading-2 font-bold" style="color: var(--text-primary);">
           予約カレンダー
         </h2>
-        <p class="text-sm text-gray-600 mt-4">
+        <p class="body text-gray-600 mt-4">
           下記カレンダーの「○」を選択し、ご希望の時間を選択してください。<br>
           ご予約はご相談希望日の4日前までにお申し込みください。<br>
           具体的なご相談内容をフォームにご記入ください。お急ぎのご相談はお電話にてお問い合わせください。
         </p>
-        <div class="text-center md:text-left mt-4 text-gray-700">
+        <div class="text-center md:text-left mt-4 body text-gray-700">
           <strong><%= @branch.name %></strong>
           <span class="ml-4">TEL:<%= @branch.phone || '04-2957-4361' %></span>
           <span class="ml-4">平日9:00〜17:00</span>
@@ -27,7 +27,7 @@
 
     <!-- カレンダー表示 -->
     <div class="bg-gray-100 rounded-lg shadow p-4 max-w-4xl mx-auto">
-      <h3 class="text-xl font-bold text-center mb-4 py-2 bg-gray-200">
+      <h3 class="heading-3 font-bold text-center mb-4 py-2 bg-gray-200">
         <%= @target_date.strftime('%Y年%-m月') %>
       </h3>
 

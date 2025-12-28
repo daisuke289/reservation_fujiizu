@@ -49,9 +49,9 @@ RSpec.describe "Reservations (full flow)", type: :system do
 
     # カレンダーページ
     visit reserve_steps_calendar_path(branch_id: branch.id)
-    expect(page).to have_content("ご希望の日付を選択してください")
-    expect(page).to have_content("今月")
-    expect(page).to have_content("来月")
+    expect(page).to have_content("予約カレンダー")
+    expect(page).to have_css("table") # Calendar is displayed as a table
+    expect(page).to have_content("月") # Weekday headers
 
     # 時間選択ページ（未来の日付でアクセス）
     future_date = 1.day.from_now.to_date

@@ -3,7 +3,10 @@
     "allow": [
       "Bash(~/.rbenv/shims/ruby -v)",
       "Bash(~/.rbenv/shims/bundle exec rails generate migration AddDefaultCapacityToBranches default_capacity:integer)",
-      "Bash(~/.rbenv/shims/bundle exec rails db:seed)"
+      "Bash(~/.rbenv/shims/bundle exec rails db:seed)",
+      "Bash(~/.rbenv/shims/bundle exec rails generate migration AddCodeToBranches code:string)",
+      "Bash(~/.rbenv/shims/bundle exec rspec)",
+      "Bash(~/.rbenv/shims/bundle exec rails runner:*)"
     ],
     "deny": [
       "Bash(sudo:*)",
