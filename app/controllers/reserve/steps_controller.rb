@@ -204,17 +204,26 @@ class Reserve::StepsController < ApplicationController
   end
   
   def save_customer_info
+    # セッションの値を先に取得（assign_attributesの影響を避けるため）
+    Rails.logger.info "🟢 Session before extraction: #{session[:reservation].inspect}"
+    Rails.logger.info "🟢 Session keys: #{session[:reservation].keys.inspect}"
+    slot_id_from_session = session[:reservation][:slot_id] || session[:reservation]['slot_id']
+    branch_id_from_session = session[:reservation][:branch_id] || session[:reservation]['branch_id']
+    Rails.logger.info "🟢 Extracted - slot_id: #{slot_id_from_session.inspect}, branch_id: #{branch_id_from_session.inspect}"
+
     @appointment = build_appointment_from_session
     @appointment.assign_attributes(customer_params)
 
-    # セッションからslot_idとbranch_idを設定（バリデーションに必要）
-    @appointment.slot_id = session[:reservation][:slot_id]
-    @appointment.branch_id = session[:reservation][:branch_id]
+    # セッションから取得した値を設定（バリデーションに必要）
+    @appointment.slot_id = slot_id_from_session
+    @appointment.branch_id = branch_id_from_session
+    Rails.logger.info "🟢 After setting - @appointment.slot_id: #{@appointment.slot_id.inspect}, branch_id: #{@appointment.branch_id.inspect}"
 
     if @appointment.valid?
       session[:reservation][:customer_info] = customer_params.to_h
       true
     else
+      Rails.logger.error "❌ Validation errors: #{@appointment.errors.full_messages.join(', ')}"
       false
     end
   end

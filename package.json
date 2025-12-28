@@ -1,0 +1,29 @@
+{
+  "name": "reservation_fujiizu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test_reservation_flow.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daisuke289/reservation_fujiizu.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daisuke289/reservation_fujiizu/issues"
+  },
+  "homepage": "https://github.com/daisuke289/reservation_fujiizu#readme",
+  "dependencies": {
+    "playwright": "^1.57.0"
+  }
+}

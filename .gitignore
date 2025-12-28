@@ -86,3 +86,8 @@ Desktop.ini
 /tmp/local_secret.txt
 /tmp/restart.txt
 SESSION_NOTES.md
+
+# Playwright E2E Testing
+node_modules/
+screenshots/
+package-lock.json

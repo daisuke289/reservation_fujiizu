@@ -30,19 +30,22 @@ class Reserve::ConfirmController < ApplicationController
   private
   
   def check_reservation_session
-    unless session[:reservation].present? && 
-           session[:reservation][:branch_id].present? && 
-           session[:reservation][:slot_id].present? && 
-           session[:reservation][:customer_info].present?
+    reservation = session[:reservation]
+    unless reservation.present? &&
+           (reservation[:branch_id] || reservation['branch_id']).present? &&
+           (reservation[:slot_id] || reservation['slot_id']).present? &&
+           (reservation[:customer_info] || reservation['customer_info']).present?
       redirect_to reserve_steps_path, alert: '予約情報が不完全です。最初からやり直してください。'
     end
   end
   
   def load_reservation_data
-    @branch = Branch.find(session[:reservation][:branch_id])
-    @slot = Slot.find(session[:reservation][:slot_id])
-    @appointment_type = AppointmentType.find(session[:reservation][:customer_info][:appointment_type_id])
-    @customer_info = session[:reservation][:customer_info]
+    reservation = session[:reservation]
+    @branch = Branch.find(reservation[:branch_id] || reservation['branch_id'])
+    @slot = Slot.find(reservation[:slot_id] || reservation['slot_id'])
+    customer_info = reservation[:customer_info] || reservation['customer_info']
+    @customer_info = customer_info.is_a?(Hash) ? customer_info.with_indifferent_access : customer_info
+    @appointment_type = AppointmentType.find(@customer_info[:appointment_type_id])
     
     # 再度スロットの可用性をチェック
     unless @slot.available?
