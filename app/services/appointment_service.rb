@@ -34,8 +34,8 @@ class AppointmentService
       end
       
       # 4. スロットの予約数をインクリメント（楽観的ロック）
-      party_size = appointment_params[:party_size] || 1
-      
+      party_size = (appointment_params[:party_size] || 1).to_i
+
       # 再度残枠確認（他のリクエストとの競合対策）
       slot.reload
       if slot.booked_count + party_size > slot.capacity

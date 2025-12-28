@@ -77,4 +77,6 @@ gem "good_job", "~> 4.11"
 
 gem "holiday_jp"
 
+gem "kaminari", "~> 1.2"
+
 gem "letter_opener_web", "~> 3.0", :group => :development

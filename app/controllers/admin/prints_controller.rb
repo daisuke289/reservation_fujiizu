@@ -1,11 +1,11 @@
 class Admin::PrintsController < Admin::BaseController
   def index
     # 当日の予約を印刷用に取得
-    @print_date = params[:date].present? ? Date.parse(params[:date]) : current_date
-    
+    @target_date = params[:date].present? ? Date.parse(params[:date]) : current_date
+
     @appointments = Appointment.joins(:slot, :branch, :appointment_type)
                               .includes(:slot, :branch, :appointment_type)
-                              .where(slots: { starts_at: @print_date.beginning_of_day..@print_date.end_of_day })
+                              .where(slots: { starts_at: @target_date.beginning_of_day..@target_date.end_of_day })
                               .active
                               .order('branches.name ASC, slots.starts_at ASC')
     

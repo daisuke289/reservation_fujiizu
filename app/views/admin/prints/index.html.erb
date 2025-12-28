@@ -8,9 +8,7 @@
   </div>
 </div>
 
-<% @appointments_by_branch.each_with_index do |branch_data, index| %>
-  <% branch = branch_data[:branch] %>
-  <% appointments = branch_data[:appointments] %>
+<% @appointments_by_branch.each_with_index do |(branch, appointments), index| %>
   
   <div class="branch-section <%= 'page-break' if index > 0 %>">
     <div class="branch-title">
