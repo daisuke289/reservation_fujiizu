@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="scroll-smooth">
   <head>
     <title><%= content_for(:title) || "富士伊豆農業協同組合 予約システム" %></title>
     <meta charset="utf-8">
@@ -11,99 +11,411 @@
 
     <%= yield :head %>
 
-    <%# Google Fonts for Nexus Design %>
+    <%# Tailwind CSS CDN %>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#ecfdf5',
+                100: '#d1fae5',
+                200: '#a7f3d0',
+                300: '#6ee7b7',
+                400: '#34d399',
+                500: '#10b981',
+                600: '#059669',
+                700: '#047857',
+                800: '#065f46',
+                900: '#064e3b',
+              },
+              dark: {
+                900: '#0a0a0f',
+                800: '#12121a',
+                700: '#1a1a24',
+                600: '#24242f',
+              }
+            },
+            fontFamily: {
+              'display': ['Inter', 'Noto Sans JP', 'system-ui', 'sans-serif'],
+              'body': ['Inter', 'Noto Sans JP', 'system-ui', 'sans-serif'],
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'glow': 'glow 2s ease-in-out infinite alternate',
+              'gradient': 'gradient 8s ease infinite',
+              'slide-up': 'slideUp 0.6s ease-out forwards',
+              'fade-in': 'fadeIn 0.8s ease-out forwards',
+              'scale-in': 'scaleIn 0.5s ease-out forwards',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'shimmer': 'shimmer 2s linear infinite',
+            }
+          }
+        }
+      }
+    </script>
+
+    <%# Google Fonts - Inter %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%# Font Awesome %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <style>
+      /* Custom Animations */
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+      @keyframes glow {
+        from { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        to { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6), 0 0 60px rgba(16, 185, 129, 0.3); }
+      }
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+
+      /* Gradient Mesh Background */
+      .gradient-mesh {
+        background:
+          radial-gradient(at 40% 20%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+          radial-gradient(at 80% 0%, rgba(5, 150, 105, 0.1) 0px, transparent 50%),
+          radial-gradient(at 0% 50%, rgba(52, 211, 153, 0.1) 0px, transparent 50%),
+          radial-gradient(at 80% 50%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.12) 0px, transparent 50%),
+          linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        background-attachment: fixed;
+      }
+
+      /* Glass Card */
+      .glass-ultra {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+      }
+
+      /* Hover 3D Effect */
+      .card-3d {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+      }
+      .card-3d:hover {
+        transform: translateY(-8px) rotateX(2deg);
+        box-shadow:
+          0 25px 50px -12px rgba(0, 0, 0, 0.15),
+          0 0 0 1px rgba(16, 185, 129, 0.1);
+      }
+
+      /* Button Gradient Animation */
+      .btn-gradient {
+        background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+        background-size: 200% 200%;
+        animation: gradient 4s ease infinite;
+      }
+      .btn-gradient:hover {
+        animation: gradient 1s ease infinite;
+      }
+
+      /* Shimmer Effect */
+      .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 2s linear infinite;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #10b981, #059669);
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #059669, #047857);
+      }
+
+      /* Text Selection */
+      ::selection {
+        background: rgba(16, 185, 129, 0.2);
+        color: #047857;
+      }
+
+      /* Focus States */
+      *:focus-visible {
+        outline: 2px solid #10b981;
+        outline-offset: 2px;
+      }
+
+      /* Stagger Animation Delays */
+      .stagger-1 { animation-delay: 0.1s; }
+      .stagger-2 { animation-delay: 0.2s; }
+      .stagger-3 { animation-delay: 0.3s; }
+      .stagger-4 { animation-delay: 0.4s; }
+      .stagger-5 { animation-delay: 0.5s; }
+    </style>
   </head>
 
-  <body class="min-h-screen">
-    <!-- ヘッダー（高齢者向けに大きめの文字） -->
-    <header class="bg-green-700 text-white shadow-lg">
-      <div class="container mx-auto max-w-6xl px-4">
-        <div class="flex items-center justify-between py-4">
-          <div>
-            <%= link_to root_path, class: "flex items-center space-x-3" do %>
-              <span class="text-2xl md:text-3xl font-bold">富士伊豆農業協同組合</span>
-              <span class="text-lg md:text-xl">予約システム</span>
-            <% end %>
+  <body class="gradient-mesh min-h-screen font-body antialiased">
+    <!-- Decorative Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
+      <div class="absolute top-1/3 -left-40 w-80 h-80 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+      <div class="absolute bottom-20 right-1/4 w-72 h-72 bg-primary-100 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse-slow" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50">
+      <div class="mx-4 mt-4">
+        <nav class="glass-ultra rounded-2xl shadow-lg shadow-black/5 max-w-6xl mx-auto">
+          <div class="px-6 py-4">
+            <div class="flex items-center justify-between">
+              <!-- Logo -->
+              <%= link_to root_path, class: "group flex items-center gap-3" do %>
+                <div class="relative">
+                  <div class="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary-500/30 transition-all duration-300 group-hover:scale-105">
+                    <i class="fas fa-leaf text-white text-xl"></i>
+                  </div>
+                  <div class="absolute -inset-1 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+                </div>
+                <div class="hidden sm:block">
+                  <div class="text-lg font-bold text-gray-900 group-hover:text-primary-600 transition-colors">富士伊豆農業協同組合</div>
+                  <div class="text-sm text-gray-500 font-medium">相続相談予約システム</div>
+                </div>
+              <% end %>
+
+              <!-- Navigation -->
+              <nav class="hidden md:flex items-center gap-2">
+                <% if defined?(admin_dashboard_path) && request.path.start_with?('/admin') %>
+                  <%= link_to admin_dashboard_path, class: "px-4 py-2.5 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-primary-50 font-medium transition-all duration-200" do %>
+                    <i class="fas fa-chart-line mr-2"></i>ダッシュボード
+                  <% end %>
+                  <%= link_to admin_reservations_path, class: "px-4 py-2.5 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-primary-50 font-medium transition-all duration-200" do %>
+                    <i class="fas fa-calendar-alt mr-2"></i>予約管理
+                  <% end %>
+                <% else %>
+                  <%= link_to root_path, class: "px-4 py-2.5 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-primary-50 font-medium transition-all duration-200" do %>
+                    <i class="fas fa-home mr-2"></i>ホーム
+                  <% end %>
+                  <%= link_to reserve_steps_path, class: "group relative inline-flex items-center gap-2 px-6 py-2.5 btn-gradient text-white font-semibold rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 hover:scale-105" do %>
+                    <i class="fas fa-calendar-check"></i>
+                    <span>予約する</span>
+                    <div class="absolute inset-0 rounded-xl shimmer"></div>
+                  <% end %>
+                <% end %>
+              </nav>
+
+              <!-- Mobile Menu Button -->
+              <button class="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <i class="fas fa-bars text-gray-600 text-xl"></i>
+              </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-gray-100">
+              <% if defined?(admin_dashboard_path) && request.path.start_with?('/admin') %>
+                <%= link_to admin_dashboard_path, class: "block px-4 py-3 rounded-xl text-gray-600 hover:bg-primary-50 font-medium" do %>
+                  <i class="fas fa-chart-line mr-3"></i>ダッシュボード
+                <% end %>
+                <%= link_to admin_reservations_path, class: "block px-4 py-3 rounded-xl text-gray-600 hover:bg-primary-50 font-medium" do %>
+                  <i class="fas fa-calendar-alt mr-3"></i>予約管理
+                <% end %>
+              <% else %>
+                <%= link_to root_path, class: "block px-4 py-3 rounded-xl text-gray-600 hover:bg-primary-50 font-medium" do %>
+                  <i class="fas fa-home mr-3"></i>ホーム
+                <% end %>
+                <%= link_to reserve_steps_path, class: "block w-full text-center mt-2 px-6 py-3 btn-gradient text-white font-semibold rounded-xl" do %>
+                  <i class="fas fa-calendar-check mr-2"></i>予約する
+                <% end %>
+              <% end %>
+            </div>
           </div>
-          <nav class="hidden md:flex space-x-6">
-            <% if defined?(admin_dashboard_path) && request.path.start_with?('/admin') %>
-              <%= link_to "ダッシュボード", admin_dashboard_path, class: "text-lg hover:text-green-200 transition" %>
-              <%= link_to "予約管理", admin_reservations_path, class: "text-lg hover:text-green-200 transition" %>
-            <% else %>
-              <%= link_to "ホーム", root_path, class: "text-lg hover:text-green-200 transition" %>
-              <%= link_to "予約する", reserve_steps_path, class: "text-lg hover:text-green-200 transition" %>
-            <% end %>
-          </nav>
-        </div>
+        </nav>
       </div>
     </header>
 
-    <!-- フラッシュメッセージ -->
+    <!-- Flash Messages -->
     <% if notice.present? %>
-      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 text-lg" role="alert">
-        <p><%= notice %></p>
-      </div>
-    <% end %>
-    
-    <% if alert.present? %>
-      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 text-lg" role="alert">
-        <p><%= alert %></p>
+      <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 animate-slide-up">
+        <div class="glass-ultra rounded-2xl shadow-xl px-6 py-4 flex items-center gap-3 border-l-4 border-primary-500">
+          <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-check text-primary-600"></i>
+          </div>
+          <p class="text-gray-700 font-medium"><%= notice %></p>
+        </div>
       </div>
     <% end %>
 
-    <!-- メインコンテンツ（高齢者向けに余白を大きめに） -->
-    <main class="container mx-auto max-w-6xl px-4 py-8 md:py-12">
-      <%= yield %>
+    <% if alert.present? %>
+      <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 animate-slide-up">
+        <div class="glass-ultra rounded-2xl shadow-xl px-6 py-4 flex items-center gap-3 border-l-4 border-red-500">
+          <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-exclamation-triangle text-red-600"></i>
+          </div>
+          <p class="text-gray-700 font-medium"><%= alert %></p>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pt-28 pb-12 min-h-screen">
+      <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <%= yield %>
+      </div>
     </main>
 
-    <!-- フッター -->
-    <footer class="bg-gray-800 text-white mt-auto">
-      <div class="container mx-auto max-w-6xl px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 class="text-xl font-semibold mb-4">富士伊豆農業協同組合</h3>
-            <p class="text-gray-300">
-              地域の皆様と共に歩む農協として、<br>
-              安心・安全なサービスを提供いたします。
+    <!-- Footer -->
+    <footer class="relative z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
+      <!-- Decorative Elements -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-20 -right-20 w-60 h-60 bg-primary-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-primary-600/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="relative container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <!-- Brand -->
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-12 h-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
+                <i class="fas fa-leaf text-white text-xl"></i>
+              </div>
+              <div>
+                <div class="text-xl font-bold">富士伊豆農業協同組合</div>
+                <div class="text-sm text-gray-400">JA Fujiizu</div>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed max-w-md">
+              地域の皆様と共に歩む農協として、安心・安全なサービスを提供いたします。
+              相続に関するお悩みは、お気軽にご相談ください。
             </p>
           </div>
+
+          <!-- Hours -->
           <div>
-            <h3 class="text-xl font-semibold mb-4">営業時間</h3>
-            <p class="text-gray-300">
-              平日: 9:00 - 17:00<br>
-              土曜: 9:00 - 12:00<br>
-              日曜・祝日: 休業
-            </p>
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i class="fas fa-clock text-primary-400"></i>
+              営業時間
+            </h3>
+            <div class="space-y-2 text-gray-400">
+              <div class="flex justify-between">
+                <span>平日</span>
+                <span class="font-medium text-white">9:00 - 17:00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>土曜</span>
+                <span class="font-medium text-white">9:00 - 12:00</span>
+              </div>
+              <div class="flex justify-between">
+                <span>日祝</span>
+                <span class="text-red-400">休業</span>
+              </div>
+            </div>
           </div>
+
+          <!-- Contact -->
           <div>
-            <h3 class="text-xl font-semibold mb-4">お問い合わせ</h3>
-            <p class="text-gray-300">
-              電話: 0544-XX-XXXX<br>
-              FAX: 0544-XX-XXXX<br>
-              メール: info@fujiizu-ja.example.com
-            </p>
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i class="fas fa-envelope text-primary-400"></i>
+              お問い合わせ
+            </h3>
+            <div class="space-y-3 text-gray-400">
+              <a href="tel:0544-XX-XXXX" class="flex items-center gap-2 hover:text-primary-400 transition-colors">
+                <i class="fas fa-phone text-sm"></i>
+                0544-XX-XXXX
+              </a>
+              <a href="mailto:info@fujiizu-ja.example.com" class="flex items-center gap-2 hover:text-primary-400 transition-colors">
+                <i class="fas fa-envelope text-sm"></i>
+                info@fujiizu-ja.example.com
+              </a>
+            </div>
           </div>
         </div>
-        <div class="border-t border-gray-700 mt-8 pt-6 text-center">
-          <p class="text-gray-400">
+
+        <!-- Bottom -->
+        <div class="mt-12 pt-8 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-gray-500 text-sm">
             &copy; <%= Date.current.year %> 富士伊豆農業協同組合. All rights reserved.
           </p>
+          <div class="flex items-center gap-4">
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all duration-300">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all duration-300">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all duration-300">
+              <i class="fab fa-line"></i>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
+
+    <script>
+      // Intersection Observer for scroll animations
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-slide-up');
+            entry.target.style.opacity = '1';
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.scroll-animate').forEach(el => {
+        el.style.opacity = '0';
+        observer.observe(el);
+      });
+
+      // Auto-hide flash messages
+      setTimeout(() => {
+        document.querySelectorAll('.animate-slide-up').forEach(el => {
+          if (el.closest('.fixed')) {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => el.remove(), 500);
+          }
+        });
+      }, 5000);
+    </script>
   </body>
 </html>
