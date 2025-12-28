@@ -1,14 +1,31 @@
 <%= render 'shared/card',
-  title: 'ご希望の時間を選択してください',
-  subtitle: "#{@selected_date.strftime('%Y年%m月%d日')}（#{%w[日 月 火 水 木 金 土][@selected_date.wday]}）の予約可能時間" do %>
+  title: '',
+  subtitle: '' do %>
 
   <div class="space-y-6">
+    <!-- タイトルセクション -->
+    <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
+      <div class="hidden md:block flex-shrink-0">
+        <%= image_tag 'illustrations/time-selection.svg', alt: '時間選択', class: 'w-40 h-40', loading: 'lazy' %>
+      </div>
+      <div class="text-center md:text-left flex-1">
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent pb-2">
+          ご希望の時間を選択してください
+        </h2>
+        <p class="text-lg text-gray-600 mt-2">
+          <%= @selected_date.strftime('%Y年%m月%d日') %>（<%= %w[日 月 火 水 木 金 土][@selected_date.wday] %>）の予約可能時間
+        </p>
+      </div>
+    </div>
     <!-- 選択した日付の表示 -->
-    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-      <p class="text-lg font-semibold text-blue-900">
-        選択した日付: <%= @selected_date.strftime('%Y年%m月%d日') %>
-        （<%= %w[日曜日 月曜日 火曜日 水曜日 木曜日 金曜日 土曜日][@selected_date.wday] %>）
-      </p>
+    <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 p-4 rounded-lg shadow-md">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-calendar-day text-2xl text-blue-600"></i>
+        <p class="text-lg font-semibold text-blue-900">
+          選択した日付: <%= @selected_date.strftime('%Y年%m月%d日') %>
+          （<%= %w[日曜日 月曜日 火曜日 水曜日 木曜日 金曜日 土曜日][@selected_date.wday] %>）
+        </p>
+      </div>
     </div>
 
     <!-- 時間枠選択グリッド -->
@@ -17,18 +34,22 @@
         <%= link_to reserve_steps_customer_path(slot_id: slot.id),
               class: 'group relative p-6 bg-white border-2 border-gray-300 rounded-lg hover:border-green-500 hover:shadow-lg transition-all transform hover:scale-105' do %>
 
-          <!-- 時間表示 -->
-          <div class="text-center">
-            <p class="text-2xl font-bold text-gray-800 group-hover:text-green-600">
-              <%= slot.starts_at.strftime('%H:%M') %>
-              <span class="text-gray-500">〜</span>
-              <%= slot.ends_at.strftime('%H:%M') %>
-            </p>
-
-            <!-- 空き状況 -->
-            <p class="mt-2 text-sm text-gray-600">
-              残り <span class="text-lg font-semibold text-green-600"><%= slot.remaining_capacity %></span> 枠
-            </p>
+          <!-- 時計アイコン + 時間表示 -->
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <i class="fas fa-clock text-3xl text-blue-600"></i>
+            </div>
+            <div class="text-left flex-1">
+              <p class="text-2xl font-bold text-gray-800 group-hover:text-green-600">
+                <%= slot.starts_at.strftime('%H:%M') %>
+                <span class="text-gray-500">〜</span>
+                <%= slot.ends_at.strftime('%H:%M') %>
+              </p>
+              <!-- 空き状況 -->
+              <p class="mt-1 text-sm text-gray-600">
+                残り <span class="text-lg font-semibold text-green-600"><%= slot.remaining_capacity %></span> 枠
+              </p>
+            </div>
           </div>
 
           <!-- 選択アイコン -->

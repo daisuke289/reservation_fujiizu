@@ -8,7 +8,7 @@ RSpec.describe "Reserve::Steps", type: :request do
     it "カレンダー画面が表示される" do
       get reserve_steps_calendar_path(branch_id: branch.id)
       expect(response).to have_http_status(:success)
-      expect(response.body).to include('ご希望の日付を選択してください')
+      expect(response.body).to include('予約カレンダー')
     end
 
     it "支店IDがない場合はリダイレクトされる" do

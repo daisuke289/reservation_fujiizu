@@ -32,8 +32,16 @@ class Reserve::StepsController < ApplicationController
     end
 
     # パラメータから年月を取得（デフォルト: 今月）
-    @year = (params[:year] || Date.today.year).to_i
-    @month = (params[:month] || Date.today.month).to_i
+    # ?ym=2026-1 形式をサポート
+    if params[:ym].present?
+      year, month = params[:ym].split('-').map(&:to_i)
+      @year = year
+      @month = month
+    else
+      @year = (params[:year] || Date.today.year).to_i
+      @month = (params[:month] || Date.today.month).to_i
+    end
+
     @target_date = Date.new(@year, @month, 1)
 
     # 表示可能期間のチェック（今月・来月のみ）
@@ -46,8 +54,15 @@ class Reserve::StepsController < ApplicationController
       @target_date = current_month
     end
 
+    # 前月・次月の計算
+    @prev_month = @target_date.prev_month
+    @next_month = @target_date.next_month
+
     # 予約可能日の計算
     @available_dates = calculate_available_dates(@branch, @year, @month)
+
+    # 祝日情報の計算
+    @holidays = calculate_holidays(@year, @month)
 
     session[:reservation][:branch_id] = @branch.id
   end
@@ -241,5 +256,21 @@ class Reserve::StepsController < ApplicationController
     end
 
     available_dates
+  end
+
+  def calculate_holidays(year, month)
+    require 'holiday_jp'
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+
+    holidays = {}
+    (start_date..end_date).each do |date|
+      holiday = HolidayJp.holiday?(date)
+      if holiday
+        holidays[date] = HolidayJp.between(date, date).first.name
+      end
+    end
+
+    holidays
   end
 end
