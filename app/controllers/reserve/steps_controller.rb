@@ -1,7 +1,7 @@
 class Reserve::StepsController < ApplicationController
   before_action :initialize_session
   before_action :set_area, only: [:branch]
-  before_action :set_branch, only: [:datetime]
+  before_action :set_branch, only: [:calendar, :time_selection]
   before_action :set_slot, only: [:customer]
   
   def index
@@ -24,24 +24,62 @@ class Reserve::StepsController < ApplicationController
     session[:reservation][:area_id] = @area.id
   end
   
-  # 日時選択
-  def datetime
+  # カレンダー表示
+  def calendar
     unless params[:branch_id].present?
       redirect_to reserve_steps_area_path, alert: '支店を選択してください'
       return
     end
-    
-    @available_slots = @branch.slots
-                              .future
-                              .available
-                              .where(starts_at: Time.current.beginning_of_day..(2.weeks.from_now.end_of_day))
-                              .includes(:branch)
-                              .order(:starts_at)
-    
-    # 日付ごとにグループ化
-    @slots_by_date = @available_slots.group_by { |slot| slot.starts_at.to_date }
-    
+
+    # パラメータから年月を取得（デフォルト: 今月）
+    @year = (params[:year] || Date.today.year).to_i
+    @month = (params[:month] || Date.today.month).to_i
+    @target_date = Date.new(@year, @month, 1)
+
+    # 表示可能期間のチェック（今月・来月のみ）
+    current_month = Date.today.beginning_of_month
+    next_month = current_month.next_month
+
+    unless [@target_date, current_month, next_month].include?(@target_date)
+      @year = current_month.year
+      @month = current_month.month
+      @target_date = current_month
+    end
+
+    # 予約可能日の計算
+    @available_dates = calculate_available_dates(@branch, @year, @month)
+
     session[:reservation][:branch_id] = @branch.id
+  end
+
+  # 時間選択
+  def time_selection
+    unless params[:date].present?
+      redirect_to reserve_steps_calendar_path(branch_id: params[:branch_id]), alert: '日付を選択してください'
+      return
+    end
+
+    @selected_date = Date.parse(params[:date])
+
+    # 過去日チェック
+    if @selected_date < Date.today
+      redirect_to reserve_steps_calendar_path(branch_id: params[:branch_id]), alert: '過去の日付は選択できません'
+      return
+    end
+
+    # その日の利用可能なスロットを取得
+    @available_slots = @branch.slots
+      .future
+      .available
+      .where(starts_at: @selected_date.beginning_of_day..@selected_date.end_of_day)
+      .order(:starts_at)
+
+    if @available_slots.empty?
+      redirect_to reserve_steps_calendar_path(branch_id: params[:branch_id]), alert: 'この日は予約できません'
+      return
+    end
+
+    session[:reservation][:selected_date] = @selected_date.to_s
   end
   
   # 顧客情報入力
@@ -65,8 +103,13 @@ class Reserve::StepsController < ApplicationController
     when 'area'
       redirect_to reserve_steps_branch_path(area_id: params[:area_id])
     when 'branch'
-      redirect_to reserve_steps_datetime_path(branch_id: params[:branch_id])
-    when 'datetime'
+      redirect_to reserve_steps_calendar_path(branch_id: params[:branch_id])
+    when 'calendar'
+      redirect_to reserve_steps_time_selection_path(
+        branch_id: params[:branch_id],
+        date: params[:selected_date]
+      )
+    when 'time_selection'
       redirect_to reserve_steps_customer_path(slot_id: params[:slot_id])
     when 'customer'
       Rails.logger.info "🟡 NEXT action (customer) - Session: #{session[:reservation].inspect}"
@@ -163,8 +206,40 @@ class Reserve::StepsController < ApplicationController
   
   def customer_params
     params.require(:appointment).permit(
-      :name, :furigana, :phone, :email, :party_size, 
+      :name, :furigana, :phone, :email, :party_size,
       :purpose, :notes, :accept_privacy, :appointment_type_id
     )
+  end
+
+  def calculate_available_dates(branch, year, month)
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+
+    available_dates = {}
+
+    (start_date..end_date).each do |date|
+      # 過去日は×
+      if date < Date.today
+        available_dates[date] = false
+        next
+      end
+
+      # 営業日判定
+      unless SlotGeneratorService.business_day?(date)
+        available_dates[date] = false
+        next
+      end
+
+      # その日に利用可能なスロットがあるか
+      has_available_slots = branch.slots
+        .future
+        .available
+        .where(starts_at: date.beginning_of_day..date.end_of_day)
+        .exists?
+
+      available_dates[date] = has_available_slots
+    end
+
+    available_dates
   end
 end

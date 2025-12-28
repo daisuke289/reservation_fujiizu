@@ -1,11 +1,11 @@
 class SlotGeneratorService
   TIME_SLOTS = [
-    ["09:00", "09:30"], ["09:30", "10:00"], ["10:00", "10:30"],
-    ["10:30", "11:00"], ["11:00", "11:30"], ["11:30", "12:00"],
-    # 昼休み 12:00-13:00 は除外
-    ["13:00", "13:30"], ["13:30", "14:00"], ["14:00", "14:30"],
-    ["14:30", "15:00"], ["15:00", "15:30"], ["15:30", "16:00"],
-    ["16:00", "16:30"]
+    ["09:00", "10:00"],
+    ["10:00", "11:00"],
+    ["11:00", "12:00"],
+    ["12:00", "13:00"],
+    ["13:00", "14:00"],
+    ["14:00", "15:00"]
   ].freeze
 
   # 指定月の全営業日に対してSlot生成
@@ -52,11 +52,19 @@ class SlotGeneratorService
     created_count
   end
 
+  # 年末年始判定
+  def self.year_end_new_year?(date)
+    # 12/30, 12/31, 1/1, 1/2, 1/3
+    (date.month == 12 && date.day >= 30) ||
+      (date.month == 1 && date.day <= 3)
+  end
+
   # 営業日判定
   def self.business_day?(date)
     return false if date.saturday?
     return false if date.sunday?
     return false if HolidayJp.holiday?(date)
+    return false if year_end_new_year?(date)
     true
   end
 end

@@ -77,10 +77,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. ✅ **GoodJob定期実行設定** (config/initializers/good_job.rb)
 4. ✅ **Branchモデルのdefault_capacityカラム追加** (マイグレーション)
 5. ✅ **Nexusデザイン統合** (グラスモーフィズム、アニメーション)
-6. ✅ **テスト実装完了** (111 examples, 0 failures, 100% success rate)
+6. ✅ **カレンダー表示と時間選択機能** (2画面構成、1時間刻み、年末年始対応) - 2024年12月28日
+7. ✅ **テスト実装完了** (140 examples, 0 failures, 100% success rate)
 
 **最終コミット**: `89541ca` - 2024年12月27日
-**テスト状況**: 全111テスト成功（Phase 4完了）
+**最新機能追加**: カレンダー表示・時間選択 - 2024年12月28日
+**テスト状況**: 全140テスト成功（カレンダー機能完了）
 **本番環境**: デプロイ準備完了
 
 ---
@@ -634,6 +636,85 @@ end
 
 ---
 
+### Phase 5: カレンダー表示と時間選択機能 ✅ 完了
+
+**実装日**: 2024年12月28日
+
+**目的**: 予約日時選択を2画面構成に変更し、ユーザビリティを向上
+
+**主な変更点**:
+- 時間枠: 30分刻み（13枠/日）→ 1時間刻み（6枠/日）
+- 営業時間: 9:00-16:30 → 9:00-15:00
+- UI: リスト表示 → カレンダー表示 + 時間選択の2画面
+- 年末年始: 12/30-1/3を休業日として追加
+- 表示期間: 直近2週間 → 今月・来月のみ
+
+**実装内容**
+
+1. **SlotGeneratorService更新** (`app/services/slot_generator_service.rb`)
+   - TIME_SLOTS定数を6枠に変更（1時間刻み）
+   - year_end_new_year?メソッド追加（12/30-1/3判定）
+   - business_day?メソッドに年末年始チェック追加
+
+2. **ルーティング更新** (`config/routes.rb`)
+   - `reserve_steps_datetime_path` 削除
+   - `reserve_steps_calendar_path` 追加
+   - `reserve_steps_time_selection_path` 追加
+
+3. **コントローラー更新** (`app/controllers/reserve/steps_controller.rb`)
+   - `datetime`アクション削除
+   - `calendar`アクション追加（カレンダー表示）
+   - `time_selection`アクション追加（時間選択）
+   - `calculate_available_dates`プライベートメソッド追加
+
+4. **ビュー作成**
+   - `app/views/reserve/steps/calendar.html.erb`（カレンダーUI）
+   - `app/views/reserve/steps/time_selection.html.erb`（時間選択UI）
+   - `app/views/reserve/steps/datetime.html.erb` 削除
+
+5. **テスト更新**
+   - `spec/services/slot_generator_service_spec.rb`（年末年始、6枠対応）
+   - `spec/requests/reserve/steps_spec.rb`（新規作成）
+   - `spec/system/reservations_full_flow_spec.rb`（フロー更新）
+   - テスト結果: 140 examples, 0 failures
+
+6. **データ再生成**
+   - 既存Slot全削除
+   - 36,540個の新Slot生成（2025年12月〜2026年2月）
+
+**実装手順**
+```bash
+# 1. データ削除
+Appointment.destroy_all
+Slot.destroy_all
+
+# 2. SlotGeneratorService更新
+# TIME_SLOTS, year_end_new_year?, business_day?を修正
+
+# 3. データ再生成
+bin/rails slots:generate_initial
+
+# 4. ルーティング・コントローラー更新
+# routes.rb, reserve/steps_controller.rb を編集
+
+# 5. ビュー作成
+# calendar.html.erb, time_selection.html.erb を新規作成
+# datetime.html.erb を削除
+
+# 6. テスト更新・実行
+bundle exec rspec  # 140 examples, 0 failures
+```
+
+**検証**
+```bash
+bin/rails console
+> Slot.count  # => 36540
+> Slot.first.ends_at - Slot.first.starts_at  # => 3600.0 (1時間)
+> SlotGeneratorService.year_end_new_year?(Date.new(2025, 12, 30))  # => true
+```
+
+---
+
 ### 実装の推奨順序まとめ ✅ 全完了
 
 ```
@@ -659,7 +740,16 @@ end
    ├─ テスト実装（111 examples, 0 failures）
    └─ Nexusデザイン統合
 
-実装完了日: 2024年12月27日
+✅ 5. Phase 5（完了 - 2024年12月28日）
+   ├─ SlotGeneratorService更新（30分→1時間、年末年始対応）
+   ├─ カレンダー画面実装（calendar.html.erb）
+   ├─ 時間選択画面実装（time_selection.html.erb）
+   ├─ コントローラー更新（Reserve::StepsController）
+   ├─ ルーティング更新（datetime削除、calendar/time_selection追加）
+   ├─ テスト更新・追加（140 examples, 0 failures）
+   └─ データ再生成（36,540 slots）
+
+実装完了日: 2024年12月27日（Phase 1-4）、2024年12月28日（Phase 5）
 ```
 
 ---

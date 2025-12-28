@@ -47,9 +47,17 @@ RSpec.describe "Reservations (full flow)", type: :system do
     expect(page).to have_content("支店を選択してください")
     expect(page).to have_content("テスト支店")
 
-    # 日時選択ページ（パラメータ付き）
-    visit reserve_steps_datetime_path(branch_id: branch.id)
-    expect(page).to have_content("ご希望の日時を選択してください")
+    # カレンダーページ
+    visit reserve_steps_calendar_path(branch_id: branch.id)
+    expect(page).to have_content("ご希望の日付を選択してください")
+    expect(page).to have_content("今月")
+    expect(page).to have_content("来月")
+
+    # 時間選択ページ（未来の日付でアクセス）
+    future_date = 1.day.from_now.to_date
+    visit reserve_steps_time_selection_path(branch_id: branch.id, date: future_date.to_s)
+    expect(page).to have_content("ご希望の時間を選択してください")
+    expect(page).to have_content(future_date.strftime('%Y年%m月%d日'))
 
     # お客様情報入力ページ（パラメータ付き）
     visit reserve_steps_customer_path(slot_id: slot.id)

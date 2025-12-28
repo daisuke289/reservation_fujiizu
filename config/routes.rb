@@ -17,7 +17,8 @@ Rails.application.routes.draw do
     get 'steps', to: 'reserve/steps#index', as: :reserve_steps
     get 'steps/area', to: 'reserve/steps#area', as: :reserve_steps_area
     get 'steps/branch', to: 'reserve/steps#branch', as: :reserve_steps_branch
-    get 'steps/datetime', to: 'reserve/steps#datetime', as: :reserve_steps_datetime
+    get 'steps/calendar', to: 'reserve/steps#calendar', as: :reserve_steps_calendar
+    get 'steps/time_selection', to: 'reserve/steps#time_selection', as: :reserve_steps_time_selection
     get 'steps/customer', to: 'reserve/steps#customer', as: :reserve_steps_customer
     post 'steps/next', to: 'reserve/steps#next', as: :reserve_steps_next
     get 'confirm', to: 'reserve/confirm#index', as: :reserve_confirm

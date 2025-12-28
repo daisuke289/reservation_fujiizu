@@ -1,0 +1,87 @@
+<%= render 'shared/card',
+  title: 'ご希望の日付を選択してください',
+  subtitle: '予約可能な日付を選んでください（○:予約可、×:予約不可）' do %>
+
+  <div class="space-y-6">
+    <!-- 月選択ナビゲーション -->
+    <div class="flex justify-center gap-4 mb-6">
+      <% current_month = Date.today.beginning_of_month %>
+      <% next_month = current_month.next_month %>
+
+      <%= link_to reserve_steps_calendar_path(
+            branch_id: @branch.id,
+            year: current_month.year,
+            month: current_month.month
+          ),
+          class: "px-6 py-3 rounded-lg font-medium transition-all #{@target_date == current_month ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" do %>
+        今月（<%= current_month.strftime('%Y年%m月') %>）
+      <% end %>
+
+      <%= link_to reserve_steps_calendar_path(
+            branch_id: @branch.id,
+            year: next_month.year,
+            month: next_month.month
+          ),
+          class: "px-6 py-3 rounded-lg font-medium transition-all #{@target_date == next_month ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" do %>
+        来月（<%= next_month.strftime('%Y年%m月') %>）
+      <% end %>
+    </div>
+
+    <!-- カレンダー表示 -->
+    <div class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-2xl font-bold text-center mb-4">
+        <%= @target_date.strftime('%Y年%m月') %>
+      </h2>
+
+      <!-- 曜日ヘッダー -->
+      <div class="grid grid-cols-7 gap-2 mb-2">
+        <% %w[日 月 火 水 木 金 土].each do |day| %>
+          <div class="text-center font-bold text-sm py-2 <%= day == '日' ? 'text-red-600' : (day == '土' ? 'text-blue-600' : 'text-gray-700') %>">
+            <%= day %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- カレンダーグリッド -->
+      <div class="grid grid-cols-7 gap-2">
+        <% start_date = @target_date.beginning_of_month.beginning_of_week(:sunday) %>
+        <% end_date = @target_date.end_of_month.end_of_week(:sunday) %>
+
+        <% (start_date..end_date).each do |date| %>
+          <% is_current_month = date.month == @target_date.month %>
+          <% is_available = @available_dates[date] %>
+          <% is_today = date == Date.today %>
+
+          <% if is_current_month && is_available %>
+            <!-- 予約可能な日 -->
+            <%= link_to reserve_steps_time_selection_path(
+                  branch_id: @branch.id,
+                  date: date.to_s
+                ),
+                class: "aspect-square flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all hover:scale-105 hover:shadow-lg #{is_today ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-white hover:border-green-500'}" do %>
+              <span class="text-lg font-semibold"><%= date.day %></span>
+              <span class="text-2xl text-green-600">○</span>
+            <% end %>
+          <% else %>
+            <!-- 予約不可の日 -->
+            <div class="aspect-square flex flex-col items-center justify-center p-2 rounded-lg <%= is_current_month ? 'bg-gray-100' : 'bg-gray-50' %>">
+              <span class="text-lg <%= is_current_month ? 'text-gray-700' : 'text-gray-400' %>">
+                <%= date.day %>
+              </span>
+              <% if is_current_month %>
+                <span class="text-xl text-red-500">×</span>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 戻るボタン -->
+    <div class="flex justify-between mt-6">
+      <%= link_to '支店選択に戻る',
+          reserve_steps_branch_path(area_id: session[:reservation][:area_id]),
+          class: 'btn btn-secondary' %>
+    </div>
+  </div>
+<% end %>
