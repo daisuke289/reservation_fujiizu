@@ -1,4 +1,5 @@
 class Reserve::ConfirmController < ApplicationController
+  before_action :normalize_session
   before_action :check_reservation_session
   before_action :load_reservation_data
   
@@ -28,7 +29,12 @@ class Reserve::ConfirmController < ApplicationController
   end
   
   private
-  
+
+  def normalize_session
+    return unless session[:reservation].present?
+    session[:reservation] = session[:reservation].to_h.with_indifferent_access
+  end
+
   def check_reservation_session
     reservation = session[:reservation]
     unless reservation.present? &&

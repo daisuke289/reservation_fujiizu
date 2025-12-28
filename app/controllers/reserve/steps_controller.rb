@@ -132,7 +132,7 @@ class Reserve::StepsController < ApplicationController
       if save_customer_info
         redirect_to reserve_confirm_path
       else
-        slot_id = session[:reservation][:slot_id]
+        slot_id = session[:reservation][:slot_id] || session[:reservation]['slot_id']
         Rails.logger.info "🔴 NEXT action - Validation failed, slot_id from session: #{slot_id.inspect}"
 
         unless slot_id
@@ -156,6 +156,8 @@ class Reserve::StepsController < ApplicationController
   
   def initialize_session
     session[:reservation] ||= {}
+    # 文字列キーとシンボルキーの両方でアクセスできるように正規化
+    session[:reservation] = session[:reservation].to_h.with_indifferent_access
   end
   
   def set_area
